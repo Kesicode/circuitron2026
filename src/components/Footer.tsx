@@ -67,13 +67,6 @@ export default function Footer() {
           {/* Contact */}
           <div className="flex flex-col md:items-end">
             <p className="font-rajdhani font-700 text-xs tracking-[.2em] uppercase mb-1.5 md:mb-4 animate-connect-blink">Connect</p>
-            <a href="https://ieee.ce-kgr.org"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-2.5 font-exo text-sm mb-2.5 md:mb-4 hover:text-[#e2e8f0] transition-colors"
-              style={{ color:"rgba(148,163,184,.5)" }}>
-              <Globe size={14} /> ieee.ce-kgr.org
-            </a>
             <div className="flex items-center gap-2">
               {[
                 { icon:Camera, label:"Instagram", href:"#" },
