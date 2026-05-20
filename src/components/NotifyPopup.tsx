@@ -21,12 +21,16 @@ export default function NotifyPopup() {
 
   useEffect(() => {
     // Check if user has already dismissed or submitted
-    const isDismissed = localStorage.getItem("circuitron_notify_dismissed");
+    const isDismissed = sessionStorage.getItem("circuitron_notify_dismissed");
     const isSubmitted = localStorage.getItem("circuitron_notify_success");
     if (isDismissed || isSubmitted) return;
 
     const handleScroll = () => {
-      if (window.scrollY > 300 && !scrollTriggered) {
+      const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const scrolledFraction = scrollHeight > 0 ? window.scrollY / scrollHeight : 0;
+      
+      // Trigger if user scrolls down more than 100px OR 20% of the page
+      if ((window.scrollY > 100 || scrolledFraction > 0.2) && !scrollTriggered) {
         setScrollTriggered(true);
         setIsOpen(true);
       }
@@ -38,7 +42,7 @@ export default function NotifyPopup() {
 
   const handleClose = () => {
     setIsOpen(false);
-    localStorage.setItem("circuitron_notify_dismissed", "true");
+    sessionStorage.setItem("circuitron_notify_dismissed", "true");
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -70,7 +74,7 @@ export default function NotifyPopup() {
     <AnimatePresence>
       {isOpen && (
         <motion.div
-          className="fixed bottom-5 right-5 z-50 w-full max-w-[360px] p-5 rounded-2xl border"
+          className="fixed bottom-5 right-5 left-5 sm:left-auto z-50 w-auto sm:w-full sm:max-w-[360px] p-5 rounded-2xl border"
           style={{
             background: "rgba(10, 15, 30, 0.92)",
             backdropFilter: "blur(16px)",
