@@ -6,6 +6,7 @@ import Navbar              from "@/components/Navbar";
 import HeroSection         from "@/components/HeroSection";
 
 import Footer              from "@/components/Footer";
+import NotifyPopup          from "@/components/NotifyPopup";
 
 import { ConfigProvider } from "@/lib/ConfigContext";
 
@@ -33,6 +34,7 @@ export default function Home() {
 
         </main>
         <Footer />
+        <NotifyPopup />
       </div>
     </ConfigProvider>
   );

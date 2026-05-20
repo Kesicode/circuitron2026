@@ -39,7 +39,7 @@ export default function HeroSection() {
   const textSegments = [
     { text: "Master ", highlight: false },
     { text: "Embedded Systems & IoT", highlight: true },
-    { text: " through a 3-phase innovation journey — Bootcamp, Internship & Hackathon.", highlight: false }
+    { text: " through a innovation journey.", highlight: false }
   ];
 
   const chars = textSegments.flatMap((seg, segIdx) => 

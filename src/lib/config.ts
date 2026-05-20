@@ -21,6 +21,9 @@ export const SITE_CONFIG = {
   // --- Announcements ---
   announcement:     "🚀 Circuitron Pre-Registration is now open! Secure your spot in the ecosystem.",
   showAnnouncement: true,
+
+  // --- Google Sheets Integration ---
+  googleScriptUrl: "https://script.google.com/macros/s/AKfycbz350A2a5ggvNZ_zzkuPuJci2c936DZ4pqYUT7pocTco4n_tONob7v6V-Aeu8bVUP5o0g/exec",
 };
 
 // Stub for future Firebase integration

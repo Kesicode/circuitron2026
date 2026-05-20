@@ -1,0 +1,219 @@
+"use client";
+import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { X, Mail, Phone, User, Check, AlertCircle } from "lucide-react";
+import { usePhaseTheme } from "@/lib/ConfigContext";
+import { submitNotification } from "@/lib/notifyAction";
+
+export default function NotifyPopup() {
+  const { color } = usePhaseTheme();
+  const [isOpen, setIsOpen] = useState(false);
+  const [scrollTriggered, setScrollTriggered] = useState(false);
+  
+  // Form states
+  const [name, setName] = useState("");
+  const [phone, setPhone] = useState("");
+  const [email, setEmail] = useState("");
+  
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    // Check if user has already dismissed or submitted
+    const isDismissed = localStorage.getItem("circuitron_notify_dismissed");
+    const isSubmitted = localStorage.getItem("circuitron_notify_success");
+    if (isDismissed || isSubmitted) return;
+
+    const handleScroll = () => {
+      if (window.scrollY > 300 && !scrollTriggered) {
+        setScrollTriggered(true);
+        setIsOpen(true);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [scrollTriggered]);
+
+  const handleClose = () => {
+    setIsOpen(false);
+    localStorage.setItem("circuitron_notify_dismissed", "true");
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!name.trim() || !phone.trim() || !email.trim()) {
+      setError("Please fill out all fields.");
+      return;
+    }
+
+    setLoading(true);
+    setError("");
+
+    try {
+      await submitNotification({ name, phone, email });
+      setSuccess(true);
+      localStorage.setItem("circuitron_notify_success", "true");
+      // Close after 2.5 seconds
+      setTimeout(() => {
+        setIsOpen(false);
+      }, 2500);
+    } catch (err: any) {
+      setError(err.message || "Failed to submit. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <AnimatePresence>
+      {isOpen && (
+        <motion.div
+          className="fixed bottom-5 right-5 z-50 w-full max-w-[360px] p-5 rounded-2xl border"
+          style={{
+            background: "rgba(10, 15, 30, 0.92)",
+            backdropFilter: "blur(16px)",
+            WebkitBackdropFilter: "blur(16px)",
+            borderColor: success ? `${color}60` : "rgba(255, 255, 255, 0.08)",
+            boxShadow: `0 10px 30px -10px rgba(0, 0, 0, 0.7), 0 0 20px -5px ${color}1a`,
+          }}
+          initial={{ opacity: 0, y: 50, scale: 0.95 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          exit={{ opacity: 0, y: 40, scale: 0.95 }}
+          transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+        >
+          {/* Top Close Button */}
+          <button
+            onClick={handleClose}
+            className="absolute top-3.5 right-3.5 p-1 rounded-full text-slate-400 hover:text-white transition-colors hover:bg-white/5 active:scale-90"
+            aria-label="Close"
+          >
+            <X size={16} />
+          </button>
+
+          {!success ? (
+            <form onSubmit={handleSubmit} className="flex flex-col gap-3.5">
+              {/* Header */}
+              <div>
+                <h4 className="font-orbitron font-bold text-sm tracking-wider uppercase mb-1" style={{ color }}>
+                  Stay Updated
+                </h4>
+                <p className="font-exo text-xs text-slate-400/90 leading-relaxed">
+                  Join the innovation journey. Get notified when registrations open!
+                </p>
+              </div>
+
+              {/* Error Alert */}
+              {error && (
+                <div className="flex items-center gap-1.5 px-3 py-2 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 font-exo text-[11px]">
+                  <AlertCircle size={13} className="shrink-0" />
+                  <span>{error}</span>
+                </div>
+              )}
+
+              {/* Name Input */}
+              <div className="relative">
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500">
+                  <User size={14} />
+                </span>
+                <input
+                  type="text"
+                  placeholder="Your Name"
+                  required
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  className="w-full bg-slate-950/45 border border-white/5 focus:border-cyan-500/50 rounded-xl pl-9 pr-4 py-2 font-exo text-xs text-slate-100 placeholder:text-slate-500 outline-none transition-all"
+                  style={{
+                    borderColor: "rgba(255, 255, 255, 0.06)",
+                  }}
+                  onFocus={(e) => (e.target.style.borderColor = color)}
+                  onBlur={(e) => (e.target.style.borderColor = "rgba(255, 255, 255, 0.06)")}
+                />
+              </div>
+
+              {/* Phone Input */}
+              <div className="relative">
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500">
+                  <Phone size={14} />
+                </span>
+                <input
+                  type="tel"
+                  placeholder="Phone Number"
+                  required
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                  className="w-full bg-slate-950/45 border border-white/5 focus:border-cyan-500/50 rounded-xl pl-9 pr-4 py-2 font-exo text-xs text-slate-100 placeholder:text-slate-500 outline-none transition-all"
+                  style={{
+                    borderColor: "rgba(255, 255, 255, 0.06)",
+                  }}
+                  onFocus={(e) => (e.target.style.borderColor = color)}
+                  onBlur={(e) => (e.target.style.borderColor = "rgba(255, 255, 255, 0.06)")}
+                />
+              </div>
+
+              {/* Email Input */}
+              <div className="relative">
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500">
+                  <Mail size={14} />
+                </span>
+                <input
+                  type="email"
+                  placeholder="Email Address"
+                  required
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="w-full bg-slate-950/45 border border-white/5 focus:border-cyan-500/50 rounded-xl pl-9 pr-4 py-2 font-exo text-xs text-slate-100 placeholder:text-slate-500 outline-none transition-all"
+                  style={{
+                    borderColor: "rgba(255, 255, 255, 0.06)",
+                  }}
+                  onFocus={(e) => (e.target.style.borderColor = color)}
+                  onBlur={(e) => (e.target.style.borderColor = "rgba(255, 255, 255, 0.06)")}
+                />
+              </div>
+
+              {/* Submit button */}
+              <button
+                type="submit"
+                disabled={loading}
+                className="w-full py-2.5 rounded-xl font-orbitron font-bold text-xs uppercase tracking-wider text-slate-950 active:scale-[0.98] transition-all disabled:opacity-50 select-none cursor-pointer flex items-center justify-center gap-1.5"
+                style={{
+                  background: `linear-gradient(135deg, #ffffff 0%, ${color} 100%)`,
+                  boxShadow: `0 4px 12px ${color}2b`,
+                }}
+              >
+                {loading ? (
+                  <div className="w-4 h-4 border-2 border-slate-950 border-t-transparent rounded-full animate-spin" />
+                ) : (
+                  "Notify Me"
+                )}
+              </button>
+            </form>
+          ) : (
+            <motion.div
+              className="flex flex-col items-center justify-center py-6 text-center"
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+            >
+              <div
+                className="w-12 h-12 rounded-full flex items-center justify-center mb-3"
+                style={{
+                  background: `${color}15`,
+                  border: `1px solid ${color}40`,
+                }}
+              >
+                <Check size={24} style={{ color }} />
+              </div>
+              <h4 className="font-orbitron font-bold text-sm tracking-wider uppercase mb-1" style={{ color }}>
+                Awesome!
+              </h4>
+              <p className="font-exo text-xs text-slate-400">
+                You're on the list. We will email you updates soon!
+              </p>
+            </motion.div>
+          )}
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
+}
