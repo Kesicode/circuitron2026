@@ -188,7 +188,7 @@ export default function NotifyPopup() {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="w-full py-3 rounded-xl font-orbitron font-bold text-xs sm:text-sm uppercase tracking-wider text-slate-950 active:scale-[0.98] transition-all disabled:opacity-50 select-none cursor-pointer flex items-center justify-center gap-1.5 mt-1"
+                  className="w-full py-3 rounded-full font-orbitron font-bold text-xs sm:text-sm uppercase tracking-wider text-slate-950 active:scale-[0.98] transition-all disabled:opacity-50 select-none cursor-pointer flex items-center justify-center gap-1.5 mt-1"
                   style={{
                     background: `linear-gradient(135deg, #ffffff 0%, ${color} 100%)`,
                     boxShadow: `0 4px 15px ${color}33`,
