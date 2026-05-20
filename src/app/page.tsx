@@ -17,7 +17,12 @@ export default function Home() {
     if ("scrollRestoration" in window.history) {
       window.history.scrollRestoration = "manual";
     }
-    window.scrollTo(0, 0);
+    if (sessionStorage.getItem("circuitron_loaded") === "true") {
+      setLoaded(true);
+      window.scrollTo(0, 0);
+    } else {
+      window.scrollTo(0, 0);
+    }
   }, []);
 
   return (
@@ -25,6 +30,7 @@ export default function Home() {
       <CircuitBackground />
       <LoadingScreen onComplete={() => {
         setLoaded(true);
+        sessionStorage.setItem("circuitron_loaded", "true");
         window.scrollTo(0, 0);
       }} />
       <div className={`transition-opacity duration-700 ${loaded ? "opacity-100" : "opacity-0"}`}>

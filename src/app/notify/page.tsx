@@ -43,12 +43,17 @@ function NotifyForm() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col justify-between pt-24 pb-8 relative z-10 px-4 sm:px-6">
-      <div className="flex-grow flex flex-col items-center justify-center py-12">
+    <div className="min-h-screen flex flex-col items-center justify-center pt-24 pb-12 relative z-10 px-4 sm:px-6">
+      <div className="w-full flex flex-col items-center justify-center">
         {/* Back button */}
         <div className="mb-6 w-full max-w-[420px] text-left">
           <Link
             href="/"
+            onClick={() => {
+              if (typeof window !== "undefined") {
+                window.scrollTo(0, 0);
+              }
+            }}
             className="inline-flex items-center gap-2 text-xs font-orbitron font-medium text-slate-400 hover:text-white transition-colors"
           >
             <ArrowLeft size={14} style={{ color }} />
@@ -190,6 +195,11 @@ function NotifyForm() {
               </p>
               <Link
                 href="/"
+                onClick={() => {
+                  if (typeof window !== "undefined") {
+                    window.scrollTo(0, 0);
+                  }
+                }}
                 className="mt-6 px-5 py-2.5 rounded-xl font-orbitron text-xs tracking-wider uppercase border border-slate-700 hover:border-white transition-colors"
               >
                 Return to Home
@@ -198,7 +208,6 @@ function NotifyForm() {
           )}
         </motion.div>
       </div>
-      <Footer />
     </div>
   );
 }
