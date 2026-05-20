@@ -220,7 +220,7 @@ export default function NotifyPopup() {
                   Awesome!
                 </h4>
                 <p className="font-exo text-xs sm:text-sm text-slate-400">
-                  You're on the list. We will email you updates soon!
+                  You're on the list. We will contact you soon!
                 </p>
               </motion.div>
             )}

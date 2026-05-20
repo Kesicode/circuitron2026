@@ -186,7 +186,7 @@ function NotifyForm() {
                 Pre-Registration Set!
               </h3>
               <p className="font-exo text-xs sm:text-sm text-slate-400 max-w-xs leading-relaxed">
-                Thank you for signing up. You have been successfully added to our Google Sheets mailing list.
+                Thank you for signing up. We will contact you soon!
               </p>
               <Link
                 href="/"
