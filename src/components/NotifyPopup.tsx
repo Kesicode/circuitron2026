@@ -26,8 +26,8 @@ export default function NotifyPopup() {
     if (isDismissed || isSubmitted) return;
 
     const handleScroll = () => {
-      // Trigger when the user scrolls past the main landing screen (Hero section height)
-      if (window.scrollY >= window.innerHeight - 60 && !scrollTriggered) {
+      // Trigger as soon as the user scrolls down slightly (causing the page bottom to move up)
+      if (window.scrollY > 40 && !scrollTriggered) {
         setScrollTriggered(true);
         setIsOpen(true);
       }
