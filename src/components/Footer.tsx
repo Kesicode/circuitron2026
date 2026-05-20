@@ -31,10 +31,10 @@ export default function Footer() {
 
   return (
     <footer id="connect" style={{ background:"rgba(6,9,18,.98)", position:"relative" }}>
-      <div className="absolute top-0 left-6 right-6 sm:left-12 sm:right-12 h-px"
+      <div className="absolute top-0 left-4 right-4 sm:left-8 sm:right-8 h-px"
         style={{ background:`linear-gradient(90deg, transparent, rgba(255,255,255,.08) 15%, ${color}40 50%, rgba(255,255,255,.08) 85%, transparent)` }} />
 
-      <div className="cc-container py-5 sm:py-7 md:py-6 flex flex-col justify-between min-h-[300px] md:min-h-[190px]">
+      <div className="cc-container !px-4 sm:!px-8 py-5 sm:py-7 md:py-6 flex flex-col justify-between min-h-[300px] md:min-h-[190px]">
         <div className="flex flex-col md:flex-row justify-between gap-5 md:gap-8 mb-4 md:mb-3">
 
           {/* Brand */}
