@@ -1,0 +1,421 @@
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&family=Exo+2:wght@300;400;500;600;700&display=swap');
+@import "tailwindcss";
+
+@font-face {
+  font-family: 'Rostex';
+  src: url('/fonts/Rostex-Oblique.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ── CSS Tokens ── */
+:root {
+  --bg:           #060912;
+  --surface:      #0b1221;
+  --surface2:     #101828;
+
+  /* Phase 1 — Bootcamp — Sky Blue */
+  --p1:           #38bdf8;
+  --p1-dim:       rgba(56,189,248,0.10);
+  --p1-border:    rgba(56,189,248,0.25);
+
+  /* Phase 2 — Internship — Violet */
+  --p2:           #6366f1;
+  --p2-dim:       rgba(99,102,241,0.10);
+  --p2-border:    rgba(99,102,241,0.25);
+
+  /* Phase 3 — Hackathon — Amber Gold */
+  --p3:           #a855f7;
+  --p3-dim:       rgba(168,85,247,0.10);
+  --p3-border:    rgba(168,85,247,0.25);
+
+  --text:         #e2e8f0;
+  --muted:        #94a3b8;
+  --dim:          #475569;
+  --border:       rgba(255,255,255,0.07);
+
+  /* Legacy aliases (kept for compatibility) */
+  --cyan:         #38bdf8;
+  --cyan-dim:     rgba(56,189,248,0.10);
+  --indigo:       #6366f1;
+  --indigo-dim:   rgba(99,102,241,0.10);
+  --purple:       #a855f7;
+  --purple-dim:   rgba(168,85,247,0.10);
+  --border-c:     rgba(56,189,248,0.25);
+}
+
+/* ── Base ── */
+@layer base {
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html {
+    scroll-behavior: smooth;
+    font-size: 16px;
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Exo 2', sans-serif;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    line-height: 1.6;
+  }
+
+  img, svg, video { display: block; max-width: 100%; }
+
+  ::-webkit-scrollbar { width: 3px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: rgba(56,189,248,0.3); border-radius: 2px; }
+  ::selection { background: rgba(56,189,248,0.18); color: var(--cyan); }
+}
+
+/* ── Components ── */
+@layer components {
+
+  /* ─── Layout ─── */
+  .cc-container {
+    max-width: 1440px;
+    margin-left: auto;
+    margin-right: auto;
+    width: 100%;
+    padding-left: 1.25rem;
+    padding-right: 1.25rem;
+  }
+  @media (min-width: 640px)  { .cc-container { padding-left: 2rem;   padding-right: 2rem;   } }
+  @media (min-width: 1024px) { .cc-container { padding-left: 3rem;   padding-right: 3rem;   } }
+  @media (min-width: 1280px) { .cc-container { padding-left: 4rem;   padding-right: 4rem;   } }
+
+  .cc-section {
+    padding-top:    4.5rem;
+    padding-bottom: 4.5rem;
+    padding-left:   1.25rem;
+    padding-right:  1.25rem;
+    position: relative;
+    overflow: hidden;
+  }
+  @media (min-width: 640px)  { .cc-section { padding-top: 5.5rem; padding-bottom: 5.5rem; padding-left: 2rem;   padding-right: 2rem; } }
+  @media (min-width: 768px)  { .cc-section { padding-top: 6.5rem; padding-bottom: 6.5rem; padding-left: 3rem;   padding-right: 3rem; } }
+  @media (min-width: 1024px) { .cc-section { padding-top: 8rem;   padding-bottom: 8rem;   padding-left: 4rem;   padding-right: 4rem; } }
+
+  /* ─── Typography ─── */
+  .font-orbitron { font-family: 'Orbitron', monospace; }
+  .font-rajdhani { font-family: 'Rajdhani', sans-serif; }
+  .font-exo      { font-family: 'Exo 2', sans-serif; }
+  .font-rostex   { font-family: 'Rostex', sans-serif; }
+
+  /* Section label (small eyebrow text above headings) */
+  .cc-label {
+    display: inline-flex;
+    align-items: center;
+    gap: .5rem;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: .65rem;
+    font-weight: 600;
+    letter-spacing: .22em;
+    text-transform: uppercase;
+    color: var(--cyan);
+    margin-bottom: .875rem;
+  }
+  .cc-label::before {
+    content: '';
+    width: 18px;
+    height: 1px;
+    background: var(--cyan);
+    border-radius: 1px;
+    flex-shrink: 0;
+  }
+
+  /* H1 — Hero title */
+  .cc-h1 {
+    font-family: 'Orbitron', monospace;
+    font-weight: 800;
+    line-height: .95;
+    color: var(--text);
+    font-size: clamp(2.4rem, 9vw, 7rem);
+    letter-spacing: -.025em;
+  }
+
+  /* H2 — Section titles */
+  .cc-h2 {
+    font-family: 'Orbitron', monospace;
+    font-weight: 700;
+    line-height: 1.15;
+    color: var(--text);
+    font-size: clamp(1.5rem, 4.5vw, 2.5rem);
+    letter-spacing: -.015em;
+    margin-bottom: 1rem;
+  }
+
+  /* H3 — Card titles */
+  .cc-h3 {
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 600;
+    color: var(--text);
+    font-size: clamp(.95rem, 2vw, 1.15rem);
+    letter-spacing: .03em;
+    line-height: 1.3;
+  }
+
+  /* Body copy */
+  .cc-body {
+    font-family: 'Exo 2', sans-serif;
+    font-weight: 300;
+    line-height: 1.75;
+    color: var(--muted);
+    font-size: clamp(.875rem, 1.8vw, 1rem);
+  }
+
+  /* ─── Cards ─── */
+  .cc-card {
+    background: rgba(255,255,255,0.025);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    transition: border-color .25s, background .25s, transform .25s;
+  }
+  .cc-card:hover {
+    border-color: rgba(56,189,248,0.28);
+    background: rgba(56,189,248,0.035);
+    transform: translateY(-3px);
+  }
+  .cc-card-static {
+    background: rgba(255,255,255,0.025);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+  }
+  .cc-card-grad {
+    background: linear-gradient(var(--surface), var(--surface)) padding-box,
+                linear-gradient(135deg, rgba(56,189,248,.18), rgba(168,85,247,.18)) border-box;
+    border: 1px solid transparent;
+    border-radius: 14px;
+    transition: background .3s, transform .25s;
+  }
+  .cc-card-grad:hover {
+    background: linear-gradient(var(--surface), var(--surface)) padding-box,
+                linear-gradient(135deg, rgba(56,189,248,.42), rgba(168,85,247,.42)) border-box;
+    transform: translateY(-3px);
+  }
+
+  /* ─── Buttons ─── */
+  .cc-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: .5rem;
+    padding: .75rem 1.625rem;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: .875rem;
+    font-weight: 700;
+    letter-spacing: .09em;
+    text-transform: uppercase;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all .2s ease;
+    text-decoration: none;
+    white-space: nowrap;
+    border: none;
+    line-height: 1;
+  }
+  /* Primary CTA */
+  .cc-btn-primary {
+    background: linear-gradient(135deg, var(--cyan), #0891b2);
+    color: #020710;
+    font-weight: 800;
+  }
+  .cc-btn-primary:hover {
+    box-shadow: 0 0 28px rgba(56,189,248,.4);
+    transform: translateY(-2px);
+  }
+  /* Outline */
+  .cc-btn-outline {
+    background: transparent;
+    color: var(--text);
+    border: 1px solid rgba(255,255,255,.15);
+  }
+  .cc-btn-outline:hover {
+    border-color: var(--cyan);
+    color: var(--cyan);
+    background: var(--cyan-dim);
+    transform: translateY(-2px);
+  }
+  /* Ghost */
+  .cc-btn-ghost {
+    background: transparent;
+    color: var(--muted);
+    border: 1px solid var(--border);
+    padding: .55rem 1.25rem;
+    font-size: .75rem;
+  }
+  .cc-btn-ghost:hover {
+    border-color: rgba(56,189,248,.35);
+    color: var(--text);
+    background: rgba(255,255,255,.04);
+  }
+
+  /* ─── Phase badges ─── */
+  .cc-phase {
+    display: inline-flex;
+    align-items: center;
+    gap: .5rem;
+    padding: .3rem .875rem;
+    border-radius: 999px;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: .65rem;
+    font-weight: 700;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+  }
+  .cc-phase-1 { background: rgba(56,189,248,.08);  color: var(--cyan);   border: 1px solid rgba(56,189,248,.22); }
+  .cc-phase-2 { background: rgba(99,102,241,.08);  color: var(--indigo); border: 1px solid rgba(99,102,241,.22); }
+  .cc-phase-3 { background: rgba(168,85,247,.08);  color: var(--purple); border: 1px solid rgba(168,85,247,.22); }
+
+  /* ─── Countdown blocks ─── */
+  .cc-count {
+    width: 58px;
+    text-align: center;
+    padding: 10px 4px;
+    background: rgba(255,255,255,.03);
+    border: 1px solid rgba(255,255,255,.08);
+    border-radius: 10px;
+    position: relative;
+  }
+  .cc-count::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 10px; right: 10px;
+    height: 1px;
+    background: var(--cyan);
+    opacity: .35;
+  }
+
+  /* ─── Circuit grid bg ─── */
+  .cc-grid {
+    background-image:
+      linear-gradient(rgba(56,189,248,.025) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(56,189,248,.025) 1px, transparent 1px);
+    background-size: 50px 50px;
+  }
+
+  /* ─── Glow helpers ─── */
+  .glow-cyan  { text-shadow: 0 0 24px rgba(56,189,248,.45), 0 0 48px rgba(56,189,248,.18); }
+  .glow-white { text-shadow: 0 0 20px rgba(255,255,255,.2); }
+
+  /* ─── Tech chip ─── */
+  .cc-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: .4rem;
+    padding: .35rem .8rem;
+    border-radius: 6px;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: .76rem;
+    font-weight: 600;
+    letter-spacing: .06em;
+    background: rgba(255,255,255,.04);
+    border: 1px solid var(--border);
+    color: var(--muted);
+    transition: all .2s;
+  }
+  .cc-chip:hover {
+    border-color: var(--border-c);
+    color: var(--cyan);
+    background: var(--cyan-dim);
+  }
+
+  /* ─── Film grain overlay ─── */
+  .noise {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 9999;
+    opacity: .014;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  /* Pulse dot */
+  .cc-pulse { animation: ccPulse 2s ease-in-out infinite; }
+
+  /* ─── Mobile-specific tweaks ─── */
+  @media (max-width: 639px) {
+    /* Prevent oversized fonts on narrow screens */
+    .cc-h2 { font-size: 1.45rem; letter-spacing: -.01em; }
+    .cc-body { font-size: .9rem; line-height: 1.7; }
+
+    /* Full-width stacked buttons */
+    .cc-btn { width: 100%; }
+
+    /* Narrower phase pills */
+    .cc-phase { font-size: .6rem; padding: .25rem .7rem; }
+
+    /* Countdown blocks slightly smaller */
+    .cc-count { width: 50px; }
+  }
+}
+
+/* ── Keyframes ── */
+@keyframes ccPulse {
+  0%,100% { opacity:.4; transform:scale(1); }
+  50%      { opacity:1;  transform:scale(1.5); }
+}
+@keyframes signalFlow {
+  0%   { background-position: -200% 0; }
+  100% { background-position:  200% 0; }
+}
+@keyframes floatY {
+  0%,100% { transform: translateY(0); }
+  50%      { transform: translateY(-10px); }
+}
+@keyframes scanLine {
+  0%   { top: -5%; }
+  100% { top: 105%; }
+}
+
+/* Typing Dots Animation */
+.dots-anim {
+  display: inline-block;
+  overflow: hidden;
+  white-space: nowrap;
+  vertical-align: bottom;
+  animation: dotsTyping 1.5s steps(4, end) infinite;
+}
+@keyframes dotsTyping {
+  0%   { max-width: 0; }
+  100% { max-width: 1.5em; }
+}
+
+/* ── Custom Selection Swap ── */
+.selection-swap-white::selection {
+  color: var(--active-color, #38bdf8) !important;
+  background: var(--active-color-dim, rgba(56, 189, 248, 0.18)) !important;
+}
+.selection-swap-white *::selection {
+  color: var(--active-color, #38bdf8) !important;
+  background: var(--active-color-dim, rgba(56, 189, 248, 0.18)) !important;
+}
+
+.selection-swap-cyan::selection {
+  color: #ffffff !important;
+  background: var(--active-color-dim, rgba(56, 189, 248, 0.18)) !important;
+}
+.selection-swap-cyan *::selection {
+  color: #ffffff !important;
+  background: var(--active-color-dim, rgba(56, 189, 248, 0.18)) !important;
+}
+
+@keyframes connectBlink {
+  0%, 100% {
+    color: rgba(148, 163, 184, 0.4);
+    text-shadow: none;
+  }
+  50% {
+    color: #38bdf8;
+    text-shadow: 0 0 8px rgba(56, 189, 248, 0.6);
+  }
+}
+.animate-connect-blink {
+  animation: connectBlink 2.2s ease-in-out infinite;
+}
