@@ -5,6 +5,9 @@ import { X, Mail, Phone, User, Check, AlertCircle } from "lucide-react";
 import { usePhaseTheme } from "@/lib/ConfigContext";
 import { submitNotification } from "@/lib/notifyAction";
 
+// In-memory flag: resets on page refresh, stays set during client-side navigation
+let notifyDismissed = false;
+
 export default function NotifyPopup() {
   const { color } = usePhaseTheme();
   const [isOpen, setIsOpen] = useState(false);
@@ -20,13 +23,12 @@ export default function NotifyPopup() {
   const [error, setError] = useState("");
 
   useEffect(() => {
-    // Check if user has already dismissed or submitted
-    const isDismissed = sessionStorage.getItem("circuitron_notify_dismissed");
+    // Never show again if user already submitted (localStorage persists forever)
     const isSubmitted = localStorage.getItem("circuitron_notify_success");
-    if (isDismissed || isSubmitted) return;
+    // Skip if dismissed during this page lifecycle
+    if (notifyDismissed || isSubmitted) return;
 
     const handleScroll = () => {
-      // Trigger as soon as the user scrolls down slightly (causing the page bottom to move up)
       if (window.scrollY > 40 && !scrollTriggered) {
         setScrollTriggered(true);
         setIsOpen(true);
@@ -39,7 +41,7 @@ export default function NotifyPopup() {
 
   const handleClose = () => {
     setIsOpen(false);
-    sessionStorage.setItem("circuitron_notify_dismissed", "true");
+    notifyDismissed = true; // Stay dismissed for rest of this page lifecycle
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
