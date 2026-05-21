@@ -51,7 +51,7 @@ export default function Footer() {
               </span>
             </button>
             <p className="font-exo text-sm leading-relaxed mb-2" style={{ color:"rgba(148,163,184,.5)" }}>
-              An intensive training program focused on Embedded Systems, IoT, and Intelligent Devices, designed to foster innovation and industry-ready skills.
+              A transformative program designed to take you from a student to an industry-ready innovator. The details are classified. The impact is guaranteed.
             </p>
             {/* IEEE badges */}
             <div className="flex items-center flex-wrap gap-3.5 mb-3 mt-1 select-none">
