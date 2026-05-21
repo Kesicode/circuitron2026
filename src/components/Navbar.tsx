@@ -50,10 +50,11 @@ export default function Navbar() {
           <Link 
             href="/"
             onClick={handleHomeClick}
-            className="flex items-center gap-2.5 cursor-pointer hover:opacity-90 active:scale-95 transition-all text-left outline-none border-none bg-transparent"
+            className="flex items-center gap-2 cursor-pointer hover:opacity-90 active:scale-95 transition-all text-left outline-none border-none bg-transparent"
           >
             <Logo size={28} />
-            <span className="font-rostex text-sm font-bold tracking-widest hidden min-[380px]:inline-block"
+            {/* Name only shows on screens wider than Mobile L (>425px) */}
+            <span className="font-rostex text-sm font-bold tracking-widest hidden min-[480px]:inline-block"
               style={{
                 ["--active-color" as any]: color,
                 ["--active-color-dim" as any]: `${color}2e`
@@ -64,24 +65,24 @@ export default function Navbar() {
           </Link>
 
           {/* Navigation Links on Right */}
-          <div className="flex items-center gap-4 sm:gap-6">
+          <div className="flex items-center gap-3 sm:gap-6">
             <Link
               href="/"
               onClick={handleHomeClick}
-              className="font-orbitron text-[11px] sm:text-xs font-semibold tracking-wider text-slate-400 hover:text-white transition-colors"
+              className="font-orbitron text-[10px] min-[480px]:text-[11px] sm:text-xs font-semibold tracking-wider text-slate-400 hover:text-white transition-colors"
             >
               HOME
             </Link>
             <Link
               href="/#connect"
               onClick={handleContactClick}
-              className="font-orbitron text-[11px] sm:text-xs font-semibold tracking-wider text-slate-400 hover:text-white transition-colors"
+              className="font-orbitron text-[10px] min-[480px]:text-[11px] sm:text-xs font-semibold tracking-wider text-slate-400 hover:text-white transition-colors"
             >
               CONTACT
             </Link>
             <Link
               href="/notify"
-              className="font-orbitron text-[10px] sm:text-[11px] font-bold tracking-wider px-3.5 sm:px-4 py-1.5 sm:py-2 rounded-full uppercase text-slate-950 hover:scale-[1.03] active:scale-[0.98] transition-all whitespace-nowrap"
+              className="font-orbitron text-[10px] sm:text-[11px] font-bold tracking-wider px-3 min-[480px]:px-3.5 sm:px-4 py-1.5 sm:py-2 rounded-full uppercase text-slate-950 hover:scale-[1.03] active:scale-[0.98] transition-all whitespace-nowrap"
               style={{
                 background: `linear-gradient(135deg, #ffffff 0%, ${color} 100%)`,
                 boxShadow: `0 0 15px -3px ${color}50`
