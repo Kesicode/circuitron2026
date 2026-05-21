@@ -12,6 +12,9 @@ const LOGS = [
   "CIRCUITRON.........READY",
 ];
 
+// Module-level flag: resets on page refresh, stays alive during client-side navigation
+let hasLoadedOnce = false;
+
 export default function LoadingScreen({ onComplete, color = "#38bdf8" }: { onComplete: () => void; color?: string }) {
   const [progress, setProgress] = useState(0);
   const [visible,  setVisible]  = useState(true);
@@ -19,7 +22,8 @@ export default function LoadingScreen({ onComplete, color = "#38bdf8" }: { onCom
   const [shouldRender, setShouldRender] = useState(false);
 
   useEffect(() => {
-    if (typeof window !== "undefined" && sessionStorage.getItem("circuitron_loaded") === "true") {
+    // Skip animation if already played during this page lifecycle (client-side nav)
+    if (hasLoadedOnce) {
       onComplete();
       return;
     }
@@ -29,7 +33,11 @@ export default function LoadingScreen({ onComplete, color = "#38bdf8" }: { onCom
       setProgress(p => {
         if (p >= 100) {
           clearInterval(t);
-          setTimeout(() => { setVisible(false); setTimeout(onComplete, 600); }, 350);
+          setTimeout(() => {
+            setVisible(false);
+            hasLoadedOnce = true; // Mark as done for this page lifecycle
+            setTimeout(onComplete, 600);
+          }, 350);
           return 100;
         }
         return Math.min(100, p + (p<70 ? 2.4 : 1.2) + Math.random()*1.6);
