@@ -73,10 +73,11 @@ export default function NotifyPopup() {
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
           {/* Backdrop overlay */}
           <motion.div
-            className="absolute inset-0 bg-black/65 backdrop-blur-md"
+            className="absolute inset-0 bg-black/60 backdrop-blur-md"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}
             onClick={handleClose}
           />
 
@@ -90,10 +91,10 @@ export default function NotifyPopup() {
               borderColor: success ? `${color}60` : "rgba(255, 255, 255, 0.08)",
               boxShadow: `0 20px 40px -15px rgba(0, 0, 0, 0.85), 0 0 35px -5px ${color}2e`,
             }}
-            initial={{ opacity: 0, scale: 0.95, y: 20 }}
+            initial={{ opacity: 0, scale: 0.93, y: 24 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.95, y: 20 }}
-            transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+            exit={{ opacity: 0, scale: 0.95, y: 16 }}
+            transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
           >
             {/* Top Close Button */}
             <button

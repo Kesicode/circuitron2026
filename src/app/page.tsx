@@ -10,27 +10,27 @@ import NotifyPopup          from "@/components/NotifyPopup";
 
 import { ConfigProvider } from "@/lib/ConfigContext";
 
-// Module-level variable: resets on every full page reload/refresh,
-// but persists during client-side navigation (e.g. back from /notify)
-let hasLoadedOnce = false;
-
 export default function Home() {
-  // If already loaded via client-side nav, start as true (skip loader)
-  const [loaded, setLoaded] = useState(hasLoadedOnce);
+  const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
     if ("scrollRestoration" in window.history) {
       window.history.scrollRestoration = "manual";
     }
-    window.scrollTo(0, 0);
+    if (sessionStorage.getItem("circuitron_loaded") === "true") {
+      setLoaded(true);
+      window.scrollTo(0, 0);
+    } else {
+      window.scrollTo(0, 0);
+    }
   }, []);
 
   return (
     <ConfigProvider>
       <CircuitBackground />
       <LoadingScreen onComplete={() => {
-        hasLoadedOnce = true;
         setLoaded(true);
+        sessionStorage.setItem("circuitron_loaded", "true");
         window.scrollTo(0, 0);
       }} />
       <div className={`transition-opacity duration-700 ${loaded ? "opacity-100" : "opacity-0"}`}>

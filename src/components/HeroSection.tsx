@@ -14,8 +14,8 @@ const containerVariants = {
   visible: {
     opacity: 1,
     transition: {
-      staggerChildren: 0.015,
-      delayChildren: 1.8,
+      staggerChildren: 0.012,
+      delayChildren: 1.2,
     }
   }
 };
@@ -25,7 +25,7 @@ const childVariants = {
   visible: {
     opacity: 1,
     transition: {
-      duration: 0.05,
+      duration: 0.04,
     }
   }
 };
@@ -37,11 +37,9 @@ export default function HeroSection() {
   const isActive = config.registrationState === "pre_open" || config.registrationState === "open";
 
   const textSegments = [
-    { text: "Where ", highlight: false },
-    { text: "embedded systems", highlight: true },
-    { text: " meet ", highlight: false },
-    { text: "real-world innovation", highlight: true },
-    { text: ".", highlight: false }
+    { text: "Master ", highlight: false },
+    { text: "Embedded Systems & IoT", highlight: true },
+    { text: " through a innovation journey.", highlight: false }
   ];
 
   const chars = textSegments.flatMap((seg, segIdx) => 
@@ -65,8 +63,8 @@ export default function HeroSection() {
         <div className="flex-grow flex flex-col items-center justify-center w-full py-4 mt-4 sm:mt-6">
           {/* ── CIRCUITRON title ── */}
           <motion.div
-            initial={{ opacity:0, y:28 }} animate={{ opacity:1, y:0 }}
-            transition={{ duration:.75, delay:.3, ease:[.16,1,.3,1] }}>
+            initial={{ opacity:0, y:32 }} animate={{ opacity:1, y:0 }}
+            transition={{ duration:.85, delay:.2, ease:[.16,1,.3,1] }}>
             <h1 className="font-rostex leading-none text-center mb-3"
               style={{ 
                 fontWeight:900, 
@@ -83,7 +81,7 @@ export default function HeroSection() {
           {/* Divider */}
           <motion.div className="flex items-center gap-3 my-6 w-32 mx-auto"
             initial={{ opacity:0, scaleX:0 }} animate={{ opacity:1, scaleX:1 }}
-            transition={{ duration:.55, delay:.65 }}>
+            transition={{ duration:.6, delay:.7, ease:[.16,1,.3,1] }}>
             <div className="flex-1 h-px" style={{ background:"rgba(255,255,255,.07)" }} />
             <div className="w-1 h-1 rounded-full" style={{ background:`${color}99` }} />
             <div className="flex-1 h-px" style={{ background:"rgba(255,255,255,.07)" }} />
@@ -93,9 +91,9 @@ export default function HeroSection() {
           {/* Coming Soon Text (Simple, Premium Crisp White) */}
           <motion.div 
             className="relative mt-8 mb-4 flex items-center justify-center select-none font-orbitron uppercase font-black text-xl min-[360px]:text-2xl sm:text-4xl md:text-5xl lg:text-6xl"
-            initial={{ opacity: 0, y: 16 }}
+            initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.75 }}
+            transition={{ duration: 0.7, delay: 0.85, ease: [.16,1,.3,1] }}
           >
             {"COMING SOON...".split("").map((char, i) => (
               <motion.span 
@@ -108,20 +106,20 @@ export default function HeroSection() {
                   backgroundClip: "text",
                 }}
                 animate={{
-                  scale: [1, 1.08, 0.98, 1],
-                  y: [0, -6, 0.5, 0],
+                  scale: [1, 1.06, 0.99, 1],
+                  y: [0, -4, 0.5, 0],
                   filter: [
                     "drop-shadow(0 0 0px transparent)",
-                    `drop-shadow(0 0 12px ${color}bf)`,
-                    `drop-shadow(0 0 2px ${color}33)`,
+                    `drop-shadow(0 0 10px ${color}99)`,
+                    `drop-shadow(0 0 2px ${color}22)`,
                     "drop-shadow(0 0 0px transparent)"
                   ]
                 }}
                 transition={{
-                  duration: 0.85,
+                  duration: 0.7,
                   repeat: Infinity,
-                  repeatDelay: 1.6,
-                  delay: i * 0.08,
+                  repeatDelay: 2.8,
+                  delay: i * 0.07,
                   ease: "easeInOut",
                 }}
               >

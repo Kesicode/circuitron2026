@@ -71,9 +71,9 @@ function NotifyForm() {
             borderColor: success ? `${color}60` : "rgba(255, 255, 255, 0.07)",
             boxShadow: `0 20px 40px -15px rgba(0, 0, 0, 0.8), 0 0 30px -10px ${color}20`,
           }}
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 36 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+          transition={{ duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
         >
           {!success ? (
             <form onSubmit={handleSubmit} className="flex flex-col gap-4.5">

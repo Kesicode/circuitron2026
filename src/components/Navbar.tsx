@@ -13,22 +13,10 @@ export default function Navbar() {
   const pathname = usePathname();
   const isNotifyPage = pathname === "/notify";
 
-  // Only animate the drop-down on the very first page load (once per session)
-  const [shouldAnimate, setShouldAnimate] = useState(false);
-
   useEffect(() => {
     const fn = () => setScrolled(window.scrollY > 20);
     window.addEventListener("scroll", fn, { passive:true });
     return () => window.removeEventListener("scroll", fn);
-  }, []);
-
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    const alreadyAnimated = sessionStorage.getItem("circuitron_nav_animated");
-    if (!alreadyAnimated) {
-      setShouldAnimate(true);
-      sessionStorage.setItem("circuitron_nav_animated", "true");
-    }
   }, []);
 
   const handleHomeClick = (e: React.MouseEvent) => {
@@ -52,9 +40,8 @@ export default function Navbar() {
   return (
     <motion.nav className="fixed top-0 left-0 right-0 z-50"
       style={{ background:bg, backdropFilter:blur, WebkitBackdropFilter:blur, borderBottom:bdr, transition:"all .35s" }}
-      initial={shouldAnimate ? { y:-80, opacity:0 } : false}
-      animate={shouldAnimate ? { y:0, opacity:1 } : undefined}
-      transition={{ duration:.55, ease:[.16,1,.3,1] }}>
+      initial={{ y:-80, opacity:0 }} animate={{ y:0, opacity:1 }}
+      transition={{ duration:.65, delay:.1, ease:[.16,1,.3,1] }}>
 
       <div className="cc-container px-4 sm:px-8">
         <div className="flex items-center justify-between h-16">

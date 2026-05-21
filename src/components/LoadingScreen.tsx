@@ -16,8 +16,15 @@ export default function LoadingScreen({ onComplete, color = "#38bdf8" }: { onCom
   const [progress, setProgress] = useState(0);
   const [visible,  setVisible]  = useState(true);
   const [logIdx,   setLogIdx]   = useState(0);
+  const [shouldRender, setShouldRender] = useState(false);
 
   useEffect(() => {
+    if (typeof window !== "undefined" && sessionStorage.getItem("circuitron_loaded") === "true") {
+      onComplete();
+      return;
+    }
+    setShouldRender(true);
+
     const t = setInterval(() => {
       setProgress(p => {
         if (p >= 100) {
@@ -35,6 +42,8 @@ export default function LoadingScreen({ onComplete, color = "#38bdf8" }: { onCom
     const idx = Math.floor((progress/100) * LOGS.length);
     if (idx > logIdx) setLogIdx(idx);
   }, [progress, logIdx]);
+
+  if (!shouldRender) return null;
 
   return (
     <AnimatePresence>
