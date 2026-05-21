@@ -34,7 +34,7 @@ export default function Home() {
 
         </main>
         <Footer />
-        <NotifyPopup />
+        <NotifyPopup loaded={loaded} />
       </div>
     </ConfigProvider>
   );

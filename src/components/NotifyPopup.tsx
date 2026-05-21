@@ -8,7 +8,7 @@ import { submitNotification } from "@/lib/notifyAction";
 // In-memory flag: resets on page refresh, stays set during client-side navigation
 let notifyDismissed = false;
 
-export default function NotifyPopup() {
+export default function NotifyPopup({ loaded = true }: { loaded?: boolean }) {
   const { color } = usePhaseTheme();
   const [isOpen, setIsOpen] = useState(false);
   const [scrollTriggered, setScrollTriggered] = useState(false);
@@ -23,6 +23,8 @@ export default function NotifyPopup() {
   const [error, setError] = useState("");
 
   useEffect(() => {
+    if (!loaded) return;
+
     // Never show again if user already submitted (localStorage persists forever)
     const isSubmitted = localStorage.getItem("circuitron_notify_success");
     // Skip if dismissed during this page lifecycle
@@ -37,7 +39,7 @@ export default function NotifyPopup() {
 
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
-  }, [scrollTriggered]);
+  }, [scrollTriggered, loaded]);
 
   const handleClose = () => {
     setIsOpen(false);
