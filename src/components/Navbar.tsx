@@ -47,9 +47,12 @@ export default function Navbar() {
         <div className="flex items-center justify-between h-16">
 
           {/* Logo on Left */}
-          <Link 
+          <a
             href="/"
-            onClick={handleHomeClick}
+            onClick={(e) => {
+              e.preventDefault();
+              window.location.href = "/";
+            }}
             className="flex items-center gap-2 cursor-pointer hover:opacity-90 active:scale-95 transition-all text-left outline-none border-none bg-transparent"
           >
             <Logo size={28} />
@@ -62,7 +65,7 @@ export default function Navbar() {
               <span className="selection-swap-white" style={{ color:"#e2e8f0" }}>CIRCUIT</span>
               <span className="selection-swap-cyan" style={{ color }}>RON</span>
             </span>
-          </Link>
+          </a>
 
           {/* Navigation Links on Right */}
           <div className="flex items-center gap-3 sm:gap-6">

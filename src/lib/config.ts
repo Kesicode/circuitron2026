@@ -3,7 +3,7 @@ export type RegState = "coming_soon" | "pre_open" | "open" | "closed";
 export const SITE_CONFIG = {
   workshopName:   "Circuitron",
   tagline:        "Embedded Systems Innovation Ecosystem",
-  subtitle:       "Master Embedded Systems & IoT Through Innovation",
+  subtitle:       "The ultimate innovation ecosystem is loading. Are you ready for what comes next?",
   venue:          "TBA",
   organization:   "IEEE",
   chapters:       ["IEEE IAS", "IEEE RAS"],

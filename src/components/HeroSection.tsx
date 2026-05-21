@@ -37,9 +37,9 @@ export default function HeroSection() {
   const isActive = config.registrationState === "pre_open" || config.registrationState === "open";
 
   const textSegments = [
-    { text: "Master ", highlight: false },
-    { text: "Embedded Systems & IoT", highlight: true },
-    { text: " through a innovation journey.", highlight: false }
+    { text: "The ultimate ", highlight: false },
+    { text: "innovation ecosystem", highlight: true },
+    { text: " is loading. Are you ready for what comes next?", highlight: false }
   ];
 
   const chars = textSegments.flatMap((seg, segIdx) => 
