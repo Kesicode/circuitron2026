@@ -29,12 +29,10 @@ export default function LoadingScreen({ onComplete, color = "#38bdf8" }: { onCom
       setProgress(p => {
         if (p >= 100) {
           clearInterval(t);
-          // Faster exit: 150ms wait then 300ms fade
-          setTimeout(() => { setVisible(false); setTimeout(onComplete, 300); }, 150);
+          setTimeout(() => { setVisible(false); setTimeout(onComplete, 600); }, 350);
           return 100;
         }
-        // Faster fill: bigger increments
-        return Math.min(100, p + (p<70 ? 4.5 : 2.8) + Math.random()*2.2);
+        return Math.min(100, p + (p<70 ? 2.4 : 1.2) + Math.random()*1.6);
       });
     }, 36);
     return () => clearInterval(t);

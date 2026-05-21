@@ -33,7 +33,7 @@ export default function Home() {
         sessionStorage.setItem("circuitron_loaded", "true");
         window.scrollTo(0, 0);
       }} />
-      <div className={`transition-opacity duration-300 ${loaded ? "opacity-100" : "opacity-0"}`}>
+      <div className={`transition-opacity duration-700 ${loaded ? "opacity-100" : "opacity-0"}`}>
         <Navbar />
         <main>
           <HeroSection />

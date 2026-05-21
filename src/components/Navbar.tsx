@@ -40,8 +40,8 @@ export default function Navbar() {
   return (
     <motion.nav className="fixed top-0 left-0 right-0 z-50"
       style={{ background:bg, backdropFilter:blur, WebkitBackdropFilter:blur, borderBottom:bdr, transition:"all .35s" }}
-      initial={{ y:-60, opacity:0 }} animate={{ y:0, opacity:1 }}
-      transition={{ duration:.3, ease:[.16,1,.3,1] }}>
+      initial={{ y:-80, opacity:0 }} animate={{ y:0, opacity:1 }}
+      transition={{ duration:.55, ease:[.16,1,.3,1] }}>
 
       <div className="cc-container px-4 sm:px-8">
         <div className="flex items-center justify-between h-16">
