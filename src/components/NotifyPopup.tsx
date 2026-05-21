@@ -5,8 +5,9 @@ import { X, Mail, Phone, User, Check, AlertCircle } from "lucide-react";
 import { usePhaseTheme } from "@/lib/ConfigContext";
 import { submitNotification } from "@/lib/notifyAction";
 
-// In-memory flag: resets on page refresh, stays set during client-side navigation
+// In-memory flags: reset on page refresh, stay set during client-side navigation
 let notifyDismissed = false;
+let notifySubmitted = false;
 
 export default function NotifyPopup({ loaded = true }: { loaded?: boolean }) {
   const { color } = usePhaseTheme();
@@ -25,20 +26,26 @@ export default function NotifyPopup({ loaded = true }: { loaded?: boolean }) {
   useEffect(() => {
     if (!loaded) return;
 
-    // Never show again if user already submitted (localStorage persists forever)
-    const isSubmitted = localStorage.getItem("circuitron_notify_success");
-    // Skip if dismissed during this page lifecycle
-    if (notifyDismissed || isSubmitted) return;
+    // Skip if dismissed or submitted during this page lifecycle (resets on refresh)
+    if (notifyDismissed || notifySubmitted) return;
+
+    let isReady = false;
+    const timer = setTimeout(() => {
+      isReady = true;
+    }, 600); // 600ms buffer to let scroll restoration and loading transition settle
 
     const handleScroll = () => {
-      if (window.scrollY > 40 && !scrollTriggered) {
+      if (isReady && window.scrollY > 80 && !scrollTriggered) {
         setScrollTriggered(true);
         setIsOpen(true);
       }
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
+    return () => {
+      clearTimeout(timer);
+      window.removeEventListener("scroll", handleScroll);
+    };
   }, [scrollTriggered, loaded]);
 
   const handleClose = () => {
@@ -59,6 +66,7 @@ export default function NotifyPopup({ loaded = true }: { loaded?: boolean }) {
     try {
       await submitNotification({ name, phone, email });
       setSuccess(true);
+      notifySubmitted = true;
       localStorage.setItem("circuitron_notify_success", "true");
       // Close after 2.5 seconds
       setTimeout(() => {
