@@ -157,16 +157,16 @@ export default function EventPhases() {
                 {pulse && <span className="w-1.5 h-1.5 rounded-full animate-pulse inline-block" style={{ background: color }} />}
                 {statusText}
               </span>
-              {countdown && (
-                <span className="flex items-center gap-1.5 text-xs font-orbitron font-bold tracking-wider text-slate-200 bg-slate-900/80 border px-3 py-1 rounded-full shadow-[0_0_15px_-3px_rgba(0,0,0,0.5)]" style={{ borderColor: `${color}40` }}>
-                  <Clock size={11} style={{ color }} />
-                  {countdown}
-                </span>
-              )}
               <span className="flex items-center gap-1.5 text-xs font-orbitron text-slate-400 bg-slate-900/60 border border-white/5 px-3 py-1 rounded-full">
                 <Calendar size={11} style={{ color }} />
                 June 01 – June 14, 2026
               </span>
+              {countdown && (
+                <span className="sm:ml-auto flex items-center gap-1.5 text-xs font-orbitron font-bold tracking-wider text-slate-200 bg-slate-900/80 border px-3 py-1 rounded-full shadow-[0_0_15px_-3px_rgba(0,0,0,0.5)]" style={{ borderColor: `${color}40` }}>
+                  <Clock size={11} style={{ color }} />
+                  {countdown}
+                </span>
+              )}
             </div>
 
             {/* Main grid: curriculum + highlights */}
