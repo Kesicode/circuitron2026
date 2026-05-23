@@ -28,7 +28,7 @@ const CURRICULUM = [
 const HIGHLIGHTS = [
   "Beginner-friendly — zero prior experience needed",
   "Live online sessions with expert mentors",
-  "Hands-on project every week",
+  "Simulation-based project every week",
   "Certificate of completion",
   "Access to private community & resources",
   "IEEE member networking opportunities",
@@ -123,7 +123,7 @@ export default function EventPhases() {
             Tech Bootcamp
           </h2>
           <p className="font-exo text-slate-400 mt-3 max-w-xl mx-auto leading-relaxed text-sm">
-            A hands-on, beginner-friendly online program on <strong className="text-slate-200">IoT & Embedded Systems</strong> — 
+            A simulation-based, beginner-friendly online program on <strong className="text-slate-200">IoT & Embedded Systems</strong> — 
             2 weeks that will transform you from a student into a builder.
           </p>
         </motion.div>
