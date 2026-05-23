@@ -26,12 +26,12 @@ const CURRICULUM = [
 ];
 
 const HIGHLIGHTS = [
-  "Beginner-friendly - zero prior experience needed",
-  "Structured Curriculum - A guided pathway from Arduino to IoT.",
-  "Simulation-based project every week",
-  "Project-Based Learning - Apply concepts through real-world projects.",
-  "Certificate of Completion",
-  "Learning Resources - Access study materials and community support.",
+  { title: "Beginner-Friendly", desc: "Zero prior experience needed" },
+  { title: "Structured Curriculum", desc: "A guided pathway from Arduino to IoT" },
+  { title: "Hands-On Simulation", desc: "Build a new project every week" },
+  { title: "Project-Based Learning", desc: "Apply concepts through real-world projects" },
+  { title: "Official Certification", desc: "Earn a certificate upon completion" },
+  { title: "Learning Resources", desc: "Access study materials and community support" },
 ];
 
 const SCHEDULE = [
@@ -248,10 +248,13 @@ export default function EventPhases() {
                         custom={i * 0.4 + 3}
                         initial="hidden" whileInView="visible" viewport={{ once: true }}
                         variants={fadeUp}
-                        className="flex items-start gap-2.5"
+                        className="flex items-start gap-3 p-2.5 -mx-2.5 rounded-lg border border-transparent hover:border-white/5 hover:bg-slate-900/40 transition-colors duration-300 group"
                       >
-                        <CheckCircle2 size={13} className="mt-0.5 shrink-0" style={{ color }} />
-                        <span className="font-exo text-xs text-slate-300 leading-normal">{h}</span>
+                        <CheckCircle2 size={14} className="mt-0.5 shrink-0 transition-transform duration-300 group-hover:scale-110" style={{ color }} />
+                        <div className="flex flex-col">
+                          <span className="font-orbitron font-bold text-[11px] text-slate-200 tracking-wide mb-0.5 group-hover:text-white transition-colors">{h.title}</span>
+                          <span className="font-exo text-[11px] text-slate-400 leading-relaxed group-hover:text-slate-300 transition-colors">{h.desc}</span>
+                        </div>
                       </motion.li>
                     ))}
                   </ul>
