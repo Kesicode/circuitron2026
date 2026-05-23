@@ -26,12 +26,12 @@ const CURRICULUM = [
 ];
 
 const HIGHLIGHTS = [
-  "Beginner-friendly — zero prior experience needed",
-  "Live online sessions with expert mentors",
+  "Beginner-friendly - zero prior experience needed",
+  "Structured Curriculum - A guided pathway from Arduino to IoT.",
   "Simulation-based project every week",
-  "Certificate of completion",
-  "Access to private community & resources",
-  "IEEE member networking opportunities",
+  "Project-Based Learning - Apply concepts through real-world projects.",
+  "Certificate of Completion",
+  "Learning Resources - Access study materials and community support.",
 ];
 
 const SCHEDULE = [
