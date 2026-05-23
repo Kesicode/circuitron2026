@@ -1,13 +1,7 @@
 "use client";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useSiteConfig, usePhaseTheme } from "@/lib/ConfigContext";
-
-const CTA_LABELS: Record<string, string> = {
-  coming_soon: "Coming Soon",
-  pre_open:    "Pre-Register Now",
-  open:        "Join the Bootcamp",
-  closed:      "Registration Closed",
-};
 
 const containerVariants = {
   hidden: { opacity: 1 },
@@ -33,13 +27,47 @@ const childVariants = {
 export default function HeroSection() {
   const { config } = useSiteConfig();
   const { color } = usePhaseTheme();
-  const btnLabel = CTA_LABELS[config.registrationState] ?? "Pre-Register Now";
-  const isActive = config.registrationState === "pre_open" || config.registrationState === "open";
+  
+  const [statusText, setStatusText] = useState("PRE-REGISTRATION LIVE");
+  const [ctaActive, setCtaActive] = useState(true);
+
+  useEffect(() => {
+    const updateHeroStatus = () => {
+      const now = new Date().getTime();
+      const preStart = new Date("2026-05-24T00:00:00+05:30").getTime();
+      const preEnd = new Date("2026-05-25T23:59:59+05:30").getTime();
+      const regStart = new Date("2026-05-26T00:00:00+05:30").getTime();
+      const regEnd = new Date("2026-05-30T23:59:59+05:30").getTime();
+
+      if (now < preStart) {
+        setStatusText("PRE-REGISTRATION LIVE"); // Early access open
+        setCtaActive(true);
+      } else if (now >= preStart && now <= preEnd) {
+        setStatusText("PRE-REGISTRATION LIVE");
+        setCtaActive(true);
+      } else if (now >= regStart && now <= regEnd) {
+        setStatusText("REGISTRATION LIVE");
+        setCtaActive(true);
+      } else if (now > preEnd && now < regStart) {
+        setStatusText("REGISTRATION LIVE");
+        setCtaActive(true);
+      } else {
+        setStatusText("REGISTRATION CLOSED");
+        setCtaActive(false);
+      }
+    };
+
+    updateHeroStatus();
+    const interval = setInterval(updateHeroStatus, 1000 * 60); // Check every minute
+    return () => clearInterval(interval);
+  }, []);
+
+  const ctaLabel = statusText === "PRE-REGISTRATION LIVE" ? "PRE-REGISTER NOW" : "REGISTER NOW";
 
   const textSegments = [
-    { text: "The ultimate ", highlight: false },
-    { text: "innovation ecosystem", highlight: true },
-    { text: " is loading. Are you ready for what comes next?", highlight: false }
+    { text: "A transformative program designed to take you from a ", highlight: false },
+    { text: "student to an industry-ready innovator.", highlight: true },
+    { text: " The details are classified. The impact is guaranteed.", highlight: false }
   ];
 
   const chars = textSegments.flatMap((seg, segIdx) => 
@@ -87,33 +115,27 @@ export default function HeroSection() {
             <div className="flex-1 h-px" style={{ background:"rgba(255,255,255,.07)" }} />
           </motion.div>
 
-          {/* Coming Soon Indicator with Negative Mask Animation */}
-          {/* Coming Soon Text (Simple, Premium Crisp White) */}
+          {/* Dynamic Registration Indicator */}
           <motion.div 
-            className="relative mt-8 mb-4 flex items-center justify-center select-none font-orbitron uppercase font-black text-xl min-[360px]:text-2xl sm:text-4xl md:text-5xl lg:text-6xl"
+            className="relative mt-8 mb-4 flex items-center justify-center select-none font-orbitron uppercase font-black text-xl min-[360px]:text-2xl sm:text-3xl md:text-4xl lg:text-5xl"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.85, ease: [.16,1,.3,1] }}
           >
-            {"COMING SOON...".split("").map((char, i) => (
+            {statusText.split("").map((char, i) => (
               <motion.span 
-                key={i} 
-                className="inline-block mr-[0.2em] min-[360px]:mr-[0.25em] sm:mr-[0.4em] md:mr-[0.45em] last:mr-0 origin-bottom"
+                key={`${char}-${i}`} 
+                className="inline-block mr-[0.1em] sm:mr-[0.2em] last:mr-0 origin-bottom"
                 style={{
                   background: `linear-gradient(to bottom, #ffffff 30%, ${color} 100%)`,
                   WebkitBackgroundClip: "text",
                   WebkitTextFillColor: "transparent",
                   backgroundClip: "text",
+                  filter: `drop-shadow(0 0 8px ${color}22)`,
                 }}
                 animate={{
                   scale: [1, 1.06, 0.99, 1],
                   y: [0, -4, 0.5, 0],
-                  filter: [
-                    "drop-shadow(0 0 0px transparent)",
-                    `drop-shadow(0 0 10px ${color}99)`,
-                    `drop-shadow(0 0 2px ${color}22)`,
-                    "drop-shadow(0 0 0px transparent)"
-                  ]
                 }}
                 transition={{
                   duration: 0.7,
@@ -127,6 +149,28 @@ export default function HeroSection() {
               </motion.span>
             ))}
           </motion.div>
+
+          {/* Glowing CTA Button */}
+          {ctaActive && (
+            <motion.div
+              initial={{ opacity: 0, y: 25 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 1.05, ease: [.16,1,.3,1] }}
+              className="mt-8 mb-2 z-20"
+            >
+              <button
+                onClick={() => window.dispatchEvent(new CustomEvent("open-pre-register"))}
+                className="font-orbitron font-bold text-xs sm:text-sm tracking-widest px-8 py-3.5 rounded-full uppercase text-slate-950 active:scale-[0.98] hover:scale-[1.03] transition-all cursor-pointer select-none"
+                style={{
+                  background: `linear-gradient(135deg, #ffffff 0%, ${color} 100%)`,
+                  boxShadow: `0 0 30px -5px ${color}80, 0 10px 20px -5px ${color}33`,
+                }}
+              >
+                {ctaLabel}
+              </button>
+            </motion.div>
+          )}
+
         </div>
 
         {/* Subtitle (Description) with Typewriter Effect */}

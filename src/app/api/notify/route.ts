@@ -3,11 +3,12 @@ import { SITE_CONFIG } from "@/lib/config";
 
 export async function POST(request: Request) {
   try {
-    const { name, phone, email } = await request.json();
+    const data = await request.json();
+    const { name, phone, email } = data;
 
     if (!name || !phone || !email) {
       return NextResponse.json(
-        { status: "error", message: "All fields (name, phone, email) are required." },
+        { status: "error", message: "Name, phone, and email are required." },
         { status: 400 }
       );
     }
@@ -17,7 +18,7 @@ export async function POST(request: Request) {
 
     // Check if it's still the default placeholder
     if (!scriptUrl || scriptUrl.includes("placeholder")) {
-      console.warn("⚠️ Google Apps Script URL is not configured. Logging submission to console:", { name, phone, email });
+      console.warn("⚠️ Google Apps Script URL is not configured. Logging submission to console:", data);
       
       // In local development, we return a mock success so the UI doesn't break
       return NextResponse.json({
@@ -32,7 +33,7 @@ export async function POST(request: Request) {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ name, phone, email }),
+      body: JSON.stringify(data),
       // Let fetch follow redirect since Apps Script redirects (302) on success
       redirect: "follow",
     });

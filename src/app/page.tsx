@@ -4,6 +4,7 @@ import CircuitBackground   from "@/components/CircuitBackground";
 import LoadingScreen       from "@/components/LoadingScreen";
 import Navbar              from "@/components/Navbar";
 import HeroSection         from "@/components/HeroSection";
+import EventPhases         from "@/components/EventPhases";
 
 import Footer              from "@/components/Footer";
 import NotifyPopup          from "@/components/NotifyPopup";
@@ -31,7 +32,7 @@ export default function Home() {
         <Navbar />
         <main>
           <HeroSection />
-
+          <EventPhases />
         </main>
         <Footer />
         <NotifyPopup loaded={loaded} />

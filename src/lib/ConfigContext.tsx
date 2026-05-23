@@ -27,7 +27,7 @@ export const ConfigProvider = ({ children }: { children: React.ReactNode }) => {
     
     const unsubscribe = onSnapshot(configDoc, (docSnap) => {
       if (docSnap.exists()) {
-        setConfig(docSnap.data() as SiteConfig);
+        setConfig({ ...DEFAULT_CONFIG, ...docSnap.data() } as SiteConfig);
       } else {
         // Seed the initial config if it doesn't exist
         setDoc(configDoc, DEFAULT_CONFIG).catch(console.error);

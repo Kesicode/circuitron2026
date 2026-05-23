@@ -1,10 +1,18 @@
-export interface NotifyData {
+export interface RegistrationData {
   name: string;
   phone: string;
   email: string;
+  college: string;
+  department: string;
+  year: string;
+  isIeee: boolean;
+  ieeeId?: string;
+  regType: string;
+  amount: number;
+  utr: string;
 }
 
-export async function submitNotification(data: NotifyData) {
+export async function submitNotification(data: RegistrationData) {
   const response = await fetch("/api/notify", {
     method: "POST",
     headers: {
@@ -20,3 +28,4 @@ export async function submitNotification(data: NotifyData) {
 
   return result;
 }
+
