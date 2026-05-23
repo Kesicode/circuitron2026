@@ -76,11 +76,17 @@ export default function EventPhases() {
         <motion.div
           initial="hidden" whileInView="visible" viewport={{ once: true }}
           variants={fadeUp} custom={1}
-          className="rounded-2xl border overflow-hidden mb-8"
+          className="relative rounded-2xl border overflow-hidden mb-8 group transition-all duration-500"
           style={{
             borderColor: `${color}30`,
-            background: "rgba(2, 6, 23, 0.7)",
+            background: "rgba(2, 6, 23, 0.55)",
+            backdropFilter: "blur(16px)",
+            WebkitBackdropFilter: "blur(16px)",
             boxShadow: `0 0 60px -20px ${color}25, 0 25px 50px -20px rgba(0,0,0,0.8)`,
+          }}
+          whileHover={{
+            borderColor: `${color}60`,
+            boxShadow: `0 0 80px -15px ${color}40, 0 25px 50px -20px rgba(0,0,0,0.9)`,
           }}
         >
           {/* Top accent bar */}
@@ -129,17 +135,18 @@ export default function EventPhases() {
                       custom={i * 0.5 + 2}
                       initial="hidden" whileInView="visible" viewport={{ once: true }}
                       variants={fadeUp}
-                      className="flex items-start gap-3 p-3 rounded-xl border border-white/5 bg-slate-950/50 hover:border-white/10 transition-all"
+                      className="group/item flex items-start gap-3 p-3.5 rounded-xl border border-white/5 bg-slate-950/40 hover:bg-slate-900/60 transition-all duration-300"
+                      whileHover={{ scale: 1.02, borderColor: `${color}40` }}
                     >
                       <div
-                        className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0 mt-0.5"
-                        style={{ background: `${color}15`, border: `1px solid ${color}25` }}
+                        className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0 mt-0.5 transition-all duration-300 group-hover/item:shadow-[0_0_15px_-3px_var(--glow-color)]"
+                        style={{ background: `${color}15`, border: `1px solid ${color}25`, '--glow-color': color } as any}
                       >
-                        <Icon size={14} style={{ color }} />
+                        <Icon size={14} style={{ color }} className="transition-transform duration-300 group-hover/item:scale-110" />
                       </div>
                       <div>
-                        <p className="font-orbitron text-[11px] font-bold text-slate-200 tracking-wide leading-tight">{label}</p>
-                        <p className="font-exo text-[10px] text-slate-500 mt-0.5 leading-normal">{desc}</p>
+                        <p className="font-orbitron text-[11px] font-bold text-slate-200 tracking-wide leading-tight group-hover/item:text-white transition-colors">{label}</p>
+                        <p className="font-exo text-[10px] text-slate-500 mt-0.5 leading-normal group-hover/item:text-slate-400 transition-colors">{desc}</p>
                       </div>
                     </motion.div>
                   ))}
@@ -244,9 +251,10 @@ export default function EventPhases() {
             { num: "02", title: "To Be Revealed", desc: "Details locked until Phase 01 completion" },
             { num: "03", title: "Classified",     desc: "Top secret final challenge" },
           ].map(({ num, title, desc }) => (
-            <div
+            <motion.div
               key={num}
-              className="flex-1 flex items-center justify-between gap-4 px-5 py-4 rounded-2xl border border-white/5 bg-slate-950/30 backdrop-blur-sm opacity-60"
+              whileHover={{ scale: 1.02, backgroundColor: "rgba(2, 6, 23, 0.4)", borderColor: "rgba(255,255,255,0.1)" }}
+              className="flex-1 flex items-center justify-between gap-4 px-5 py-4 rounded-2xl border border-white/5 bg-slate-950/30 backdrop-blur-sm opacity-60 hover:opacity-100 transition-opacity duration-300 cursor-not-allowed"
             >
               <div className="flex items-center gap-4">
                 <div className="w-9 h-9 rounded-xl bg-slate-900/80 border border-white/5 flex items-center justify-center shrink-0">
@@ -264,7 +272,7 @@ export default function EventPhases() {
                 </div>
               </div>
               <ChevronRight size={16} className="text-slate-700 shrink-0" />
-            </div>
+            </motion.div>
           ))}
         </motion.div>
 
