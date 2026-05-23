@@ -167,14 +167,6 @@ export default function EventPhases() {
                 <Calendar size={11} style={{ color }} />
                 June 01 – June 14, 2026
               </span>
-              <span className="flex items-center gap-1.5 text-xs font-orbitron text-slate-400 bg-slate-900/60 border border-white/5 px-3 py-1 rounded-full">
-                <Clock size={11} style={{ color }} />
-                2 Weeks
-              </span>
-              <span className="flex items-center gap-1.5 text-xs font-orbitron text-slate-400 bg-slate-900/60 border border-white/5 px-3 py-1 rounded-full">
-                <MonitorSmartphone size={11} style={{ color }} />
-                100% Online
-              </span>
             </div>
 
             {/* Main grid: curriculum + highlights */}
