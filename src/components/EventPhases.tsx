@@ -201,7 +201,7 @@ export default function EventPhases() {
                           >
                             <div className="flex items-start gap-3">
                               <div
-                                className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0 mt-0.5 transition-all duration-300 group-hover/item:shadow-[0_0_15px_-3px_var(--glow-color)]"
+                                className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0 mt-0.5 transition-all duration-300 group-hover/item:shadow-[0_0_8px_-3px_var(--glow-color)]"
                                 style={{ background: `${color}15`, border: `1px solid ${color}25`, '--glow-color': color } as any}
                               >
                                 <Icon size={14} style={{ color }} className="transition-transform duration-300 group-hover/item:scale-110" />
