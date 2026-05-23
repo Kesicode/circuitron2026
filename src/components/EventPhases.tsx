@@ -35,8 +35,8 @@ const HIGHLIGHTS = [
 ];
 
 const SCHEDULE = [
-  { week: "Week 1", label: "Jun 01 – Jun 07", title: "Foundations", desc: "Microcontrollers, Circuits & Programming basics" },
-  { week: "Week 2", label: "Jun 08 – Jun 14", title: "Build & Deploy", desc: "IoT Systems, Cloud integration & Final Project" },
+  { week: "Week 1", label: "Jun 01 – Jun 07", title: "Arduino", desc: "Microcontrollers, Circuits & Programming basics" },
+  { week: "Week 2", label: "Jun 08 – Jun 14", title: "ESP 32",  desc: "IoT Systems, Cloud integration & Final Project" },
 ];
 
 export default function EventPhases() {
