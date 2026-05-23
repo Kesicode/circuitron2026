@@ -63,7 +63,7 @@ export default function CircuitBackground() {
       const dt = Math.min(100, delta);
       
       // Calculate speed based on delta time
-      const speed = isMobile ? 0.00048 : 0.00072;
+      const speed = isMobile ? 0.00012 : 0.00018;
       t += dt * speed;
 
       ctx.clearRect(0,0,W,H);
@@ -89,7 +89,7 @@ export default function CircuitBackground() {
 
       // Helper to get drifted position
       const getPos = (node: Node) => {
-        const driftAmount = isMobile ? 4 : 8;
+        const driftAmount = isMobile ? 1 : 2;
         return {
           x: node.x + Math.sin(t + node.phase) * driftAmount,
           y: node.y + Math.cos(t * 0.8 + node.phase) * driftAmount
