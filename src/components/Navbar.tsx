@@ -79,14 +79,14 @@ export default function Navbar() {
             <Link
               href="/"
               onClick={handleHomeClick}
-              className="font-orbitron text-[10px] min-[480px]:text-[11px] sm:text-xs font-semibold tracking-wider text-slate-400 hover:text-white transition-colors"
+              className="hidden sm:block font-orbitron text-[10px] min-[480px]:text-[11px] sm:text-xs font-semibold tracking-wider text-slate-400 hover:text-white transition-colors"
             >
               HOME
             </Link>
             <Link
               href="/#connect"
               onClick={handleContactClick}
-              className="font-orbitron text-[10px] min-[480px]:text-[11px] sm:text-xs font-semibold tracking-wider text-slate-400 hover:text-white transition-colors"
+              className="hidden sm:block font-orbitron text-[10px] min-[480px]:text-[11px] sm:text-xs font-semibold tracking-wider text-slate-400 hover:text-white transition-colors"
             >
               CONTACT
             </Link>

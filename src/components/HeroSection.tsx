@@ -117,7 +117,7 @@ export default function HeroSection() {
 
           {/* Dynamic Registration Indicator */}
           <motion.div 
-            className="relative mt-8 mb-4 flex items-center justify-center select-none font-orbitron uppercase font-black text-xl min-[360px]:text-2xl sm:text-3xl md:text-4xl lg:text-5xl"
+            className="relative mt-8 mb-4 flex flex-wrap items-center justify-center text-center select-none font-orbitron uppercase font-black text-lg min-[360px]:text-xl sm:text-3xl md:text-4xl lg:text-5xl"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.85, ease: [.16,1,.3,1] }}
