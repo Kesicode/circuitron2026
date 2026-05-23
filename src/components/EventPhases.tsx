@@ -101,6 +101,13 @@ export default function EventPhases() {
     return () => clearInterval(interval);
   }, []);
 
+  useEffect(() => {
+    if (selectedTopic) {
+      const timer = setTimeout(() => setSelectedTopic(null), 5000);
+      return () => clearTimeout(timer);
+    }
+  }, [selectedTopic]);
+
   return (
     <section id="ecosystem" className="cc-section relative overflow-hidden pt-8 pb-16 sm:py-16">
       {/* Background glow removed as requested */}
