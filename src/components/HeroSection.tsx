@@ -130,7 +130,7 @@ export default function HeroSection() {
                   className={`flex items-center justify-center select-none font-orbitron uppercase font-black ${
                     wIdx === 0 
                       ? "text-lg min-[360px]:text-xl sm:text-3xl md:text-4xl lg:text-5xl" 
-                      : "text-4xl sm:text-6xl md:text-7xl lg:text-[6rem] mt-1 sm:mt-2"
+                      : "text-3xl sm:text-5xl md:text-6xl lg:text-[5rem] mt-1 sm:mt-2"
                   }`}
                 >
                   {word.split("").map((char, cIdx) => {
