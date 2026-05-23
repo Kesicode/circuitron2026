@@ -1,4 +1,5 @@
 "use client";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import {
   Cpu, Lock, Calendar, Wifi, Zap, Code2, Radio,
@@ -40,6 +41,63 @@ const SCHEDULE = [
 
 export default function EventPhases() {
   const { color } = usePhaseTheme();
+
+  const [statusText, setStatusText] = useState("UPCOMING");
+  const [pulse, setPulse] = useState(false);
+  const [countdown, setCountdown] = useState("");
+
+  useEffect(() => {
+    const updateStatus = () => {
+      const now = new Date().getTime();
+      const regStart = new Date("2026-05-24T00:00:00+05:30").getTime();
+      const regEnd = new Date("2026-05-30T23:59:59+05:30").getTime();
+      const eventStart = new Date("2026-06-01T00:00:00+05:30").getTime();
+      const eventEnd = new Date("2026-06-14T23:59:59+05:30").getTime();
+
+      let targetTime = 0;
+      let prefix = "";
+
+      if (now < regStart) {
+        setStatusText("UPCOMING");
+        setPulse(false);
+        targetTime = regStart;
+        prefix = "Reg opens in";
+      } else if (now >= regStart && now <= regEnd) {
+        setStatusText("REGISTRATION OPEN");
+        setPulse(true);
+        targetTime = regEnd;
+        prefix = "Reg ends in";
+      } else if (now > regEnd && now < eventStart) {
+        setStatusText("ENROLLMENT CLOSED");
+        setPulse(false);
+        targetTime = eventStart;
+        prefix = "Starts in";
+      } else if (now >= eventStart && now <= eventEnd) {
+        setStatusText("ACTIVE PHASE");
+        setPulse(true);
+        targetTime = eventEnd;
+        prefix = "Ends in";
+      } else {
+        setStatusText("COMPLETED");
+        setPulse(false);
+        setCountdown("");
+        return;
+      }
+
+      const diff = targetTime - now;
+      if (diff > 0) {
+        const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+        const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+        const s = Math.floor((diff % (1000 * 60)) / 1000);
+        setCountdown(`${prefix} ${d}d ${h}h ${m}m ${s}s`);
+      }
+    };
+
+    updateStatus();
+    const interval = setInterval(updateStatus, 1000); 
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <section id="ecosystem" className="cc-section relative overflow-hidden py-24">
@@ -96,9 +154,15 @@ export default function EventPhases() {
                 className="flex items-center gap-1.5 text-[10px] font-orbitron font-bold tracking-wider uppercase px-3 py-1 rounded-full border"
                 style={{ color, borderColor: `${color}40`, background: `${color}12` }}
               >
-                <span className="w-1.5 h-1.5 rounded-full animate-pulse inline-block" style={{ background: color }} />
-                ACTIVE
+                {pulse && <span className="w-1.5 h-1.5 rounded-full animate-pulse inline-block" style={{ background: color }} />}
+                {statusText}
               </span>
+              {countdown && (
+                <span className="flex items-center gap-1.5 text-xs font-orbitron font-bold tracking-wider text-slate-200 bg-slate-900/80 border px-3 py-1 rounded-full shadow-[0_0_15px_-3px_rgba(0,0,0,0.5)]" style={{ borderColor: `${color}40` }}>
+                  <Clock size={11} style={{ color }} />
+                  {countdown}
+                </span>
+              )}
               <span className="flex items-center gap-1.5 text-xs font-orbitron text-slate-400 bg-slate-900/60 border border-white/5 px-3 py-1 rounded-full">
                 <Calendar size={11} style={{ color }} />
                 June 01 – June 14, 2026
