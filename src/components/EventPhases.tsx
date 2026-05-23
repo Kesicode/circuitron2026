@@ -43,11 +43,7 @@ export default function EventPhases() {
 
   return (
     <section id="ecosystem" className="cc-section relative overflow-hidden py-24">
-      {/* Background glow */}
-      <div
-        className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] rounded-full blur-[140px] pointer-events-none opacity-10"
-        style={{ background: `radial-gradient(circle, ${color} 0%, transparent 70%)` }}
-      />
+      {/* Background glow removed as requested */}
 
       <div className="cc-container relative z-10 max-w-5xl mx-auto px-4">
 
@@ -82,11 +78,11 @@ export default function EventPhases() {
             background: "rgba(2, 6, 23, 0.55)",
             backdropFilter: "blur(16px)",
             WebkitBackdropFilter: "blur(16px)",
-            boxShadow: `0 0 60px -20px ${color}25, 0 25px 50px -20px rgba(0,0,0,0.8)`,
+            boxShadow: `0 25px 50px -20px rgba(0,0,0,0.8)`,
           }}
           whileHover={{
             borderColor: `${color}60`,
-            boxShadow: `0 0 80px -15px ${color}40, 0 25px 50px -20px rgba(0,0,0,0.9)`,
+            boxShadow: `0 25px 50px -20px rgba(0,0,0,0.9)`,
           }}
         >
           {/* Top accent bar */}
