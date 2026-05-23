@@ -75,8 +75,9 @@ export default function EventPhases() {
       } else if (now >= eventStart && now <= eventEnd) {
         setStatusText("ACTIVE PHASE");
         setPulse(true);
-        targetTime = eventEnd;
-        prefix = "Ends in";
+        const dayNum = Math.floor((now - eventStart) / (1000 * 60 * 60 * 24)) + 1;
+        setCountdown(`Day ${dayNum}`);
+        return;
       } else {
         setStatusText("COMPLETED");
         setPulse(false);
