@@ -182,47 +182,52 @@ export default function EventPhases() {
                     What You'll Learn
                   </span>
                 </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 items-start">
-                  {CURRICULUM.map((topic, i) => {
-                    const { icon: Icon, label, desc, details } = topic;
-                    const isSelected = selectedTopic?.label === label;
-                    return (
-                      <motion.div
-                        key={label}
-                        custom={i * 0.5 + 2}
-                        initial="hidden" whileInView="visible" viewport={{ once: true }}
-                        variants={fadeUp}
-                        onClick={() => setSelectedTopic(isSelected ? null : topic)}
-                        className="group/item flex flex-col gap-3 p-3.5 rounded-xl border border-white/5 bg-slate-950/40 hover:bg-slate-900/60 transition-all duration-300 cursor-pointer overflow-hidden"
-                        whileHover={{ scale: isSelected ? 1 : 1.02, borderColor: `${color}40` }}
-                      >
-                        <div className="flex items-start gap-3">
-                          <div
-                            className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0 mt-0.5 transition-all duration-300 group-hover/item:shadow-[0_0_15px_-3px_var(--glow-color)]"
-                            style={{ background: `${color}15`, border: `1px solid ${color}25`, '--glow-color': color } as any}
+                <div className="flex flex-col sm:flex-row gap-3 items-start">
+                  {[0, 1].map((colIndex) => (
+                    <div key={colIndex} className="flex flex-col gap-3 flex-1 w-full">
+                      {CURRICULUM.filter((_, i) => i % 2 === colIndex).map((topic, i) => {
+                        const { icon: Icon, label, desc, details } = topic;
+                        const isSelected = selectedTopic?.label === label;
+                        const originalIndex = colIndex === 0 ? i * 2 : i * 2 + 1;
+                        return (
+                          <motion.div
+                            key={label}
+                            custom={originalIndex * 0.5 + 2}
+                            initial="hidden" whileInView="visible" viewport={{ once: true }}
+                            variants={fadeUp}
+                            onClick={() => setSelectedTopic(isSelected ? null : topic)}
+                            className="group/item flex flex-col gap-3 p-3.5 rounded-xl border border-white/5 bg-slate-950/40 hover:bg-slate-900/60 transition-all duration-300 cursor-pointer overflow-hidden"
+                            whileHover={{ scale: isSelected ? 1 : 1.02, borderColor: `${color}40` }}
                           >
-                            <Icon size={14} style={{ color }} className="transition-transform duration-300 group-hover/item:scale-110" />
-                          </div>
-                          <div>
-                            <p className="font-orbitron text-[11px] font-bold text-slate-200 tracking-wide leading-tight group-hover/item:text-white transition-colors">{label}</p>
-                            <p className="font-exo text-[10px] text-slate-500 mt-0.5 leading-normal group-hover/item:text-slate-400 transition-colors">{desc}</p>
-                          </div>
-                        </div>
-                        <AnimatePresence>
-                          {isSelected && (
-                            <motion.div
-                              initial={{ height: 0, opacity: 0 }}
-                              animate={{ height: "auto", opacity: 1, marginTop: 4 }}
-                              exit={{ height: 0, opacity: 0, marginTop: 0 }}
-                              className="font-exo text-[11px] text-slate-300 leading-relaxed border-t border-white/5 pt-2"
-                            >
-                              {details}
-                            </motion.div>
-                          )}
-                        </AnimatePresence>
-                      </motion.div>
-                    );
-                  })}
+                            <div className="flex items-start gap-3">
+                              <div
+                                className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0 mt-0.5 transition-all duration-300 group-hover/item:shadow-[0_0_15px_-3px_var(--glow-color)]"
+                                style={{ background: `${color}15`, border: `1px solid ${color}25`, '--glow-color': color } as any}
+                              >
+                                <Icon size={14} style={{ color }} className="transition-transform duration-300 group-hover/item:scale-110" />
+                              </div>
+                              <div>
+                                <p className="font-orbitron text-[11px] font-bold text-slate-200 tracking-wide leading-tight group-hover/item:text-white transition-colors">{label}</p>
+                                <p className="font-exo text-[10px] text-slate-500 mt-0.5 leading-normal group-hover/item:text-slate-400 transition-colors">{desc}</p>
+                              </div>
+                            </div>
+                            <AnimatePresence>
+                              {isSelected && (
+                                <motion.div
+                                  initial={{ height: 0, opacity: 0 }}
+                                  animate={{ height: "auto", opacity: 1, marginTop: 4 }}
+                                  exit={{ height: 0, opacity: 0, marginTop: 0 }}
+                                  className="font-exo text-[11px] text-slate-300 leading-relaxed border-t border-white/5 pt-2"
+                                >
+                                  {details}
+                                </motion.div>
+                              )}
+                            </AnimatePresence>
+                          </motion.div>
+                        );
+                      })}
+                    </div>
+                  ))}
                 </div>
               </div>
 
