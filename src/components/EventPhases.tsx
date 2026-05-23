@@ -182,7 +182,7 @@ export default function EventPhases() {
                     What You'll Learn
                   </span>
                 </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 items-start">
                   {CURRICULUM.map((topic, i) => {
                     const { icon: Icon, label, desc, details } = topic;
                     const isSelected = selectedTopic?.label === label;
