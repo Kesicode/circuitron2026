@@ -102,7 +102,7 @@ export default function EventPhases() {
   }, []);
 
   return (
-    <section id="ecosystem" className="cc-section relative overflow-hidden py-24">
+    <section id="ecosystem" className="cc-section relative overflow-hidden pt-8 pb-16 sm:py-16">
       {/* Background glow removed as requested */}
 
       <div className="cc-container relative z-10 max-w-5xl mx-auto px-4">
