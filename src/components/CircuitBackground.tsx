@@ -79,7 +79,7 @@ export default function CircuitBackground() {
 
       // 1. Create linear gradient for lines
       const lineGrad = ctx.createLinearGradient(0, 0, 0, H);
-      const pulse = (Math.sin(t)+1)/2;
+      const pulse = (Math.sin(t * 8) + 1) / 2;
       const alpha = isMobile ? (.04 + pulse*.05) : (.06 + pulse*.10);
       lineGrad.addColorStop(0, `rgba(${themeRgb},${alpha.toFixed(3)})`);
       lineGrad.addColorStop(1, `rgba(${secondaryRgb},${alpha.toFixed(3)})`);
@@ -120,7 +120,7 @@ export default function CircuitBackground() {
       // 4. Draw dots
       nodes.forEach(n => {
         const p1 = getPos(n);
-        const dotPulse = (Math.sin(t*1.3+n.phase)+1)/2;
+        const dotPulse = (Math.sin(t * 12 + n.phase) + 1) / 2;
         ctx.beginPath();
         ctx.arc(p1.x, p1.y, (isMobile ? .8 : 1) + dotPulse*(isMobile ? .8 : 1.5), 0, Math.PI*2);
         ctx.fill();
