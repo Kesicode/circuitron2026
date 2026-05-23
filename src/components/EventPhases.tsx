@@ -26,12 +26,12 @@ const CURRICULUM = [
 ];
 
 const HIGHLIGHTS = [
-  { title: "Beginner-Friendly", desc: "Zero prior experience needed" },
-  { title: "Structured Curriculum", desc: "A guided pathway from Arduino to IoT" },
-  { title: "Hands-On Simulation", desc: "Build a new project every week" },
-  { title: "Project-Based Learning", desc: "Apply concepts through real-world projects" },
-  { title: "Official Certification", desc: "Earn a certificate upon completion" },
-  { title: "Learning Resources", desc: "Access study materials and community support" },
+  "Beginner-friendly - zero prior experience needed",
+  "Structured Curriculum - A guided pathway from Arduino to IoT.",
+  "Simulation-based project every week",
+  "Project-Based Learning - Apply concepts through real-world projects.",
+  "Certificate of Completion",
+  "Learning Resources - Access study materials and community support.",
 ];
 
 const SCHEDULE = [
@@ -196,8 +196,8 @@ export default function EventPhases() {
                             initial="hidden" whileInView="visible" viewport={{ once: true }}
                             variants={fadeUp}
                             onClick={() => setSelectedTopic(isSelected ? null : topic)}
-                            className="group/item flex flex-col gap-3 p-3.5 rounded-xl border border-white/5 bg-slate-950/40 hover:bg-slate-900/60 transition-all duration-300 cursor-pointer overflow-hidden"
-                            whileHover={{ scale: isSelected ? 1 : 1.02, borderColor: `${color}40` }}
+                            className="group/item flex flex-col gap-3 p-3.5 rounded-xl border border-blue-900/30 bg-blue-950/40 hover:bg-blue-900/40 transition-all duration-300 cursor-pointer overflow-hidden"
+                            whileHover={{ scale: isSelected ? 1 : 1.02, borderColor: `${color}60` }}
                           >
                             <div className="flex items-start gap-3">
                               <div
@@ -207,8 +207,8 @@ export default function EventPhases() {
                                 <Icon size={14} style={{ color }} className="transition-transform duration-300 group-hover/item:scale-110" />
                               </div>
                               <div>
-                                <p className="font-orbitron text-[11px] font-bold text-slate-200 tracking-wide leading-tight group-hover/item:text-white transition-colors">{label}</p>
-                                <p className="font-exo text-[10px] text-slate-500 mt-0.5 leading-normal group-hover/item:text-slate-400 transition-colors">{desc}</p>
+                                <p className="font-orbitron text-[11px] font-bold text-white tracking-wide leading-tight transition-colors">{label}</p>
+                                <p className="font-exo text-[10px] text-slate-400 mt-0.5 leading-normal transition-colors">{desc}</p>
                               </div>
                             </div>
                             <AnimatePresence>
@@ -248,13 +248,10 @@ export default function EventPhases() {
                         custom={i * 0.4 + 3}
                         initial="hidden" whileInView="visible" viewport={{ once: true }}
                         variants={fadeUp}
-                        className="flex items-start gap-3 p-2.5 -mx-2.5 rounded-lg border border-transparent hover:border-white/5 hover:bg-slate-900/40 transition-colors duration-300 group"
+                        className="flex items-start gap-2.5"
                       >
-                        <CheckCircle2 size={14} className="mt-0.5 shrink-0 transition-transform duration-300 group-hover:scale-110" style={{ color }} />
-                        <div className="flex flex-col">
-                          <span className="font-orbitron font-bold text-[11px] text-slate-200 tracking-wide mb-0.5 group-hover:text-white transition-colors">{h.title}</span>
-                          <span className="font-exo text-[11px] text-slate-400 leading-relaxed group-hover:text-slate-300 transition-colors">{h.desc}</span>
-                        </div>
+                        <CheckCircle2 size={13} className="mt-0.5 shrink-0" style={{ color }} />
+                        <span className="font-exo text-xs text-slate-300 leading-normal">{h}</span>
                       </motion.li>
                     ))}
                   </ul>
