@@ -117,37 +117,54 @@ export default function HeroSection() {
 
           {/* Dynamic Registration Indicator */}
           <motion.div 
-            className="relative mt-8 mb-4 flex flex-wrap items-center justify-center text-center select-none font-orbitron uppercase font-black text-lg min-[360px]:text-xl sm:text-3xl md:text-4xl lg:text-5xl"
+            className="relative mt-8 mb-4 flex flex-col items-center justify-center text-center w-full"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.85, ease: [.16,1,.3,1] }}
           >
-            {statusText.split("").map((char, i) => (
-              <motion.span 
-                key={`${char}-${i}`} 
-                className="inline-block mr-[0.1em] sm:mr-[0.2em] last:mr-0 origin-bottom"
-                style={{
-                  background: `linear-gradient(to bottom, #ffffff 30%, ${color} 100%)`,
-                  WebkitBackgroundClip: "text",
-                  WebkitTextFillColor: "transparent",
-                  backgroundClip: "text",
-                  filter: `drop-shadow(0 0 8px ${color}22)`,
-                }}
-                animate={{
-                  scale: [1, 1.06, 0.99, 1],
-                  y: [0, -4, 0.5, 0],
-                }}
-                transition={{
-                  duration: 0.7,
-                  repeat: Infinity,
-                  repeatDelay: 2.8,
-                  delay: i * 0.07,
-                  ease: "easeInOut",
-                }}
-              >
-                {char === " " ? "\u00A0" : char}
-              </motion.span>
-            ))}
+            {statusText.split(" ").map((word, wIdx) => {
+              const prevCharsLength = wIdx === 0 ? 0 : statusText.split(" ")[0].length;
+              return (
+                <div 
+                  key={word} 
+                  className={`flex items-center justify-center select-none font-orbitron uppercase font-black ${
+                    wIdx === 0 
+                      ? "text-lg min-[360px]:text-xl sm:text-3xl md:text-4xl lg:text-5xl" 
+                      : "text-4xl sm:text-6xl md:text-7xl lg:text-[6rem] mt-1 sm:mt-2"
+                  }`}
+                >
+                  {word.split("").map((char, cIdx) => {
+                    const i = prevCharsLength + cIdx;
+                    return (
+                      <motion.span 
+                        key={`${char}-${i}`} 
+                        className="inline-block mr-[0.05em] sm:mr-[0.1em] last:mr-0 origin-bottom"
+                        style={{
+                          background: `linear-gradient(to bottom, #ffffff 30%, ${color} 100%)`,
+                          WebkitBackgroundClip: "text",
+                          WebkitTextFillColor: "transparent",
+                          backgroundClip: "text",
+                          filter: `drop-shadow(0 0 ${wIdx === 0 ? '8px' : '15px'} ${color}22)`,
+                        }}
+                        animate={{
+                          scale: [1, 1.06, 0.99, 1],
+                          y: [0, -4, 0.5, 0],
+                        }}
+                        transition={{
+                          duration: 0.7,
+                          repeat: Infinity,
+                          repeatDelay: 2.8,
+                          delay: i * 0.07,
+                          ease: "easeInOut",
+                        }}
+                      >
+                        {char}
+                      </motion.span>
+                    );
+                  })}
+                </div>
+              );
+            })}
           </motion.div>
 
           {/* Glowing CTA Button */}
