@@ -124,7 +124,7 @@ export default function EventPhases() {
             className="inline-block text-[10px] font-orbitron font-bold tracking-[0.2em] uppercase px-3 py-1 rounded-full mb-3 border"
             style={{ color, borderColor: `${color}30`, background: `${color}10` }}
           >
-            PHASE 01 · NOW ACTIVE
+            PHASE 01
           </span>
           <h2 className="font-orbitron font-extrabold text-3xl sm:text-4xl text-slate-100 tracking-tight">
             Tech Bootcamp
@@ -133,14 +133,7 @@ export default function EventPhases() {
             A simulation-based, beginner-friendly online program on <strong className="text-slate-200">IoT & Embedded Systems</strong> — 
             2 weeks that will transform you from a student into a builder.
           </p>
-          <div className="flex flex-wrap justify-center gap-3 mt-6">
-            {["CSE", "ECE", "EEE", "IT"].map((branch) => (
-              <div key={branch} className="flex items-center gap-2.5 px-4 py-2 rounded-xl border border-white/5 bg-[#060912]/80 backdrop-blur-md shadow-[0_4px_10px_rgba(0,0,0,0.2)] transition-colors hover:bg-white/5 cursor-default">
-                <Layers size={14} style={{ color }} />
-                <span className="font-orbitron text-xs font-bold text-slate-200 tracking-wider">{branch}</span>
-              </div>
-            ))}
-          </div>
+
         </motion.div>
 
         {/* ── Main Phase 1 Card ── */}

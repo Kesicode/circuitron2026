@@ -28,7 +28,7 @@ export default function CircuitBackground() {
     const isMobile = W < 768;
 
     const build = (): Node[] => {
-      const sp = isMobile ? 55 : 75;
+      const sp = isMobile ? 95 : 75;
       const nodes: Node[] = [];
       const cols = Math.ceil(W/sp)+1, rows = Math.ceil(H/sp)+1;
       for (let r=0; r<=rows; r++)
@@ -40,8 +40,8 @@ export default function CircuitBackground() {
             phase: Math.random()*Math.PI*2 
           });
       
-      const maxDist = isMobile ? 75 : 110;
-      const prob = isMobile ? .50 : .55;
+      const maxDist = isMobile ? 100 : 110;
+      const prob = isMobile ? .48 : .55;
       for (let i=0;i<nodes.length;i++)
         for (let j=i+1;j<nodes.length;j++) {
           const dx=nodes[i].x-nodes[j].x, dy=nodes[i].y-nodes[j].y;
@@ -70,21 +70,24 @@ export default function CircuitBackground() {
 
       // Parse theme RGB and complementary RGB
       const themeRgb = hexToRgb(color);
-      let secondaryRgb = "168,85,247"; // Default purple
-      if (color.toLowerCase() === "#a855f7") {
-        secondaryRgb = "34,211,238"; // Complementary cyan
-      } else if (color.toLowerCase() === "#6366f1") {
-        secondaryRgb = "34,211,238"; // Complementary cyan
-      }
-
-      // 1. Create linear gradient for lines
-      const lineGrad = ctx.createLinearGradient(0, 0, 0, H);
       const pulse = (Math.sin(t * 8) + 1) / 2;
       const alpha = isMobile ? (.04 + pulse*.05) : (.06 + pulse*.10);
-      lineGrad.addColorStop(0, `rgba(${themeRgb},${alpha.toFixed(3)})`);
-      lineGrad.addColorStop(1, `rgba(${secondaryRgb},${alpha.toFixed(3)})`);
 
-      ctx.strokeStyle = lineGrad;
+      // Avoid creating heavy linear gradients on mobile frames (use solid colors instead)
+      if (isMobile) {
+        ctx.strokeStyle = `rgba(${themeRgb},${alpha.toFixed(3)})`;
+      } else {
+        let secondaryRgb = "168,85,247"; // Default purple
+        if (color.toLowerCase() === "#a855f7") {
+          secondaryRgb = "34,211,238"; // Complementary cyan
+        } else if (color.toLowerCase() === "#6366f1") {
+          secondaryRgb = "34,211,238"; // Complementary cyan
+        }
+        const lineGrad = ctx.createLinearGradient(0, 0, 0, H);
+        lineGrad.addColorStop(0, `rgba(${themeRgb},${alpha.toFixed(3)})`);
+        lineGrad.addColorStop(1, `rgba(${secondaryRgb},${alpha.toFixed(3)})`);
+        ctx.strokeStyle = lineGrad;
+      }
       ctx.lineWidth = .85;
 
       // Helper to get drifted position
@@ -111,11 +114,21 @@ export default function CircuitBackground() {
         });
       });
 
-      // 3. Create linear gradient for dots (brighter fill)
-      const dotGrad = ctx.createLinearGradient(0, 0, 0, H);
-      dotGrad.addColorStop(0, `rgba(${themeRgb},0.45)`);
-      dotGrad.addColorStop(1, `rgba(${secondaryRgb},0.45)`);
-      ctx.fillStyle = dotGrad;
+      // 3. Set fill style for dots
+      if (isMobile) {
+        ctx.fillStyle = `rgba(${themeRgb},0.45)`;
+      } else {
+        let secondaryRgb = "168,85,247"; // Default purple
+        if (color.toLowerCase() === "#a855f7") {
+          secondaryRgb = "34,211,238"; // Complementary cyan
+        } else if (color.toLowerCase() === "#6366f1") {
+          secondaryRgb = "34,211,238"; // Complementary cyan
+        }
+        const dotGrad = ctx.createLinearGradient(0, 0, 0, H);
+        dotGrad.addColorStop(0, `rgba(${themeRgb},0.45)`);
+        dotGrad.addColorStop(1, `rgba(${secondaryRgb},0.45)`);
+        ctx.fillStyle = dotGrad;
+      }
 
       // 4. Draw dots
       nodes.forEach(n => {

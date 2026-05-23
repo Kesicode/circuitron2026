@@ -39,12 +39,25 @@ export default function NotifyPopup({ loaded = true }: { loaded?: boolean }) {
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
+    
     return () => {
       clearTimeout(timer);
       window.removeEventListener("scroll", handleScroll);
       window.removeEventListener("open-pre-register", handleOpenEvent);
     };
-  }, [scrollTriggered, loaded]);
+  }, [scrollTriggered, loaded, notifyDismissed, notifySubmitted]);
+
+  // Lock body scroll when popup is open
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "unset";
+    }
+    return () => {
+      document.body.style.overflow = "unset";
+    };
+  }, [isOpen]);
 
   const handleClose = () => {
     setIsOpen(false);
@@ -64,10 +77,10 @@ export default function NotifyPopup({ loaded = true }: { loaded?: boolean }) {
   return (
     <AnimatePresence>
       {isOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+        <div className="fixed inset-0 z-50 overflow-y-auto">
           {/* Backdrop overlay */}
           <motion.div
-            className="absolute inset-0 bg-black/70 backdrop-blur-md"
+            className="fixed inset-0 bg-black/70 backdrop-blur-md"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -75,32 +88,41 @@ export default function NotifyPopup({ loaded = true }: { loaded?: boolean }) {
             onClick={handleClose}
           />
 
-          {/* Modal Container Card */}
-          <motion.div
-            className="relative w-full max-w-[450px] p-6 sm:p-8 rounded-2xl border"
-            style={{
-              background: "rgba(10, 15, 30, 0.95)",
-              backdropFilter: "blur(20px)",
-              WebkitBackdropFilter: "blur(20px)",
-              borderColor: success ? "#10b98160" : "rgba(255, 255, 255, 0.08)",
-              boxShadow: `0 20px 40px -15px rgba(0, 0, 0, 0.9), 0 0 35px -5px ${color}22`,
+          <div
+            className="flex min-h-full items-center justify-center p-4"
+            onClick={(e) => {
+              if (e.target === e.currentTarget) {
+                handleClose();
+              }
             }}
-            initial={{ opacity: 0, scale: 0.93, y: 24 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.95, y: 16 }}
-            transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
           >
-            {/* Top Close Button */}
-            <button
-              onClick={handleClose}
-              className="absolute top-4 right-4 p-1.5 rounded-full text-slate-400 hover:text-white transition-colors hover:bg-white/5 active:scale-90 z-20 cursor-pointer"
-              aria-label="Close"
+            {/* Modal Container Card */}
+            <motion.div
+              className="relative w-full max-w-[450px] p-6 sm:p-8 rounded-2xl border my-8"
+              style={{
+                background: "rgba(10, 15, 30, 0.95)",
+                backdropFilter: "blur(20px)",
+                WebkitBackdropFilter: "blur(20px)",
+                borderColor: success ? "#10b98160" : "rgba(255, 255, 255, 0.08)",
+                boxShadow: `0 20px 40px -15px rgba(0, 0, 0, 0.9), 0 0 35px -5px ${color}22`,
+              }}
+              initial={{ opacity: 0, scale: 0.93, y: 24 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 16 }}
+              transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
             >
-              <X size={18} />
-            </button>
+              {/* Top Close Button */}
+              <button
+                onClick={handleClose}
+                className="absolute top-4 right-4 p-1.5 rounded-full text-slate-400 hover:text-white transition-colors hover:bg-white/5 active:scale-90 z-20 cursor-pointer"
+                aria-label="Close"
+              >
+                <X size={18} />
+              </button>
 
-            <RegistrationForm onSuccessCallback={handleSuccess} />
-          </motion.div>
+              <RegistrationForm onSuccessCallback={handleSuccess} />
+            </motion.div>
+          </div>
         </div>
       )}
     </AnimatePresence>

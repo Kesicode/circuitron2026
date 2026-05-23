@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { User, Phone, Mail, Building, Layers, ArrowLeft, ArrowRight, Check, AlertCircle, QrCode, ShieldCheck } from "lucide-react";
+import { User, Phone, Mail, Building, Layers, ArrowLeft, ArrowRight, Check, AlertCircle, QrCode, ShieldCheck, UploadCloud, FileImage } from "lucide-react";
 import { usePhaseTheme, useSiteConfig } from "@/lib/ConfigContext";
 import { submitNotification } from "@/lib/notifyAction";
 
@@ -75,7 +75,37 @@ export default function RegistrationForm({ onSuccessCallback }: RegistrationForm
   const [year, setYear] = useState("1st Year");
   const [isIeee, setIsIeee] = useState(false);
   const [ieeeId, setIeeeId] = useState("");
-  const [utr, setUtr] = useState("");
+  
+  // Payment Screenshot Upload States
+  const [screenshot, setScreenshot] = useState<File | null>(null);
+  const [screenshotPreview, setScreenshotPreview] = useState<string | null>(null);
+  const [screenshotBase64, setScreenshotBase64] = useState<string>("");
+  const [screenshotMimeType, setScreenshotMimeType] = useState<string>("");
+  const [screenshotFileName, setScreenshotFileName] = useState<string>("");
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      if (file.size > 5 * 1024 * 1024) { // Limit to 5MB
+        setError("File is too large. Max size is 5MB.");
+        return;
+      }
+      setError("");
+      setScreenshot(file);
+      setScreenshotFileName(file.name);
+      setScreenshotMimeType(file.type);
+      
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const base64String = reader.result as string;
+        // Strip the data:image/xxx;base64, prefix
+        const base64Data = base64String.split(",")[1];
+        setScreenshotBase64(base64Data);
+        setScreenshotPreview(base64String);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
   // States for dynamic price
   const [priceInfo, setPriceInfo] = useState({
@@ -86,6 +116,7 @@ export default function RegistrationForm({ onSuccessCallback }: RegistrationForm
   });
 
   const [loading, setLoading] = useState(false);
+  const [validatingIeee, setValidatingIeee] = useState(false);
   const [error, setError] = useState("");
   const [isMobile, setIsMobile] = useState(false);
 
@@ -101,17 +132,39 @@ export default function RegistrationForm({ onSuccessCallback }: RegistrationForm
     setPriceInfo(info);
   }, [isIeee]);
 
-  // Form validations for Step 1
+  // Prevent refresh when loading
+  useEffect(() => {
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      if (loading) {
+        e.preventDefault();
+        e.returnValue = '';
+      }
+    };
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    return () => window.removeEventListener('beforeunload', handleBeforeUnload);
+  }, [loading]);
+
   const validateStep1 = () => {
     if (!name.trim()) return "Name is required.";
-    if (phone.trim().length < 10) return "Provide a valid 10-digit phone number.";
+    
+    const phoneClean = phone.replace(/\D/g, "");
+    if (phoneClean.length !== 10) return "Provide a valid 10-digit phone number.";
+    if (!/^[6-9]\d{9}$/.test(phoneClean)) return "Provide a valid Indian mobile number.";
+    if (/^(\d)\1{9}$/.test(phoneClean)) return "Phone number cannot be all the same digit.";
+    if (/^(0123456789|1234567890|9876543210)$/.test(phoneClean)) return "Provide a real phone number.";
+
     if (!/\S+@\S+\.\S+/.test(email)) return "Provide a valid email address.";
     if (!college.trim()) return "College/Institution name is required.";
-    if (isIeee && !ieeeId.trim()) return "IEEE Membership ID is required for IEEE members.";
+    if (isIeee) {
+      const idClean = ieeeId.trim();
+      if (!idClean) return "IEEE Membership ID is required for IEEE members.";
+      // Basic IEEE ID format check: typically 7 to 9 digits
+      if (!/^\d{7,9}$/.test(idClean)) return "Invalid IEEE Membership ID format. It should be 7 to 9 digits.";
+    }
     return null;
   };
 
-  const handleNextStep = (e: React.FormEvent) => {
+  const handleNextStep = async (e: React.FormEvent) => {
     e.preventDefault();
     const err = validateStep1();
     if (err) {
@@ -119,6 +172,37 @@ export default function RegistrationForm({ onSuccessCallback }: RegistrationForm
       return;
     }
     setError("");
+
+    // Asynchronous check for IEEE ID uniqueness
+    if (isIeee && ieeeId.trim()) {
+      setValidatingIeee(true);
+      try {
+        const response = await fetch(`/api/validate-ieee?id=${encodeURIComponent(ieeeId.trim())}`);
+        const resultText = await response.text();
+        let result;
+        try {
+          result = JSON.parse(resultText);
+        } catch (e) {
+          throw new Error("Invalid response from validation server.");
+        }
+        
+        if (!response.ok || result.status === "error") {
+          throw new Error(result.message || "Failed to validate IEEE Membership ID.");
+        }
+        
+        if (result.registered) {
+          setError("This IEEE Membership ID has already been registered. IDs cannot be reused.");
+          setValidatingIeee(false);
+          return;
+        }
+      } catch (err: any) {
+        setError(err.message || "Network error. Failed to verify IEEE ID uniqueness.");
+        setValidatingIeee(false);
+        return;
+      }
+      setValidatingIeee(false);
+    }
+
     setStep(2);
   };
 
@@ -134,10 +218,9 @@ export default function RegistrationForm({ onSuccessCallback }: RegistrationForm
       return;
     }
 
-    // UTR validation: exactly 12 digits
-    const utrTrimmed = utr.trim();
-    if (!/^\d{12}$/.test(utrTrimmed)) {
-      setError("Please enter a valid 12-digit UPI UTR / Transaction Reference Number.");
+    // Screenshot validation
+    if (!screenshotBase64) {
+      setError("Please upload the payment screenshot to complete registration.");
       return;
     }
 
@@ -156,7 +239,9 @@ export default function RegistrationForm({ onSuccessCallback }: RegistrationForm
         ieeeId: isIeee ? ieeeId : "N/A",
         regType: priceInfo.period,
         amount: priceInfo.price,
-        utr: utrTrimmed,
+        screenshotBase64,
+        screenshotMimeType,
+        screenshotFileName,
       });
 
       setStep(3);
@@ -171,7 +256,7 @@ export default function RegistrationForm({ onSuccessCallback }: RegistrationForm
   };
 
   // UPI configuration
-  const upiId = config.upiId || "kskashinadh4@oksbi";
+  const upiId = config.upiId || "paytm.s1wsfli@pty";
   const payeeName = encodeURIComponent("Circuitron");
   const txnNote = encodeURIComponent("Circuitron Tech Bootcamp");
   const upiPayload = `upi://pay?pa=${upiId}&pn=${payeeName}&am=${priceInfo.price}&cu=INR&tn=${txnNote}`;
@@ -186,25 +271,7 @@ export default function RegistrationForm({ onSuccessCallback }: RegistrationForm
     });
   };
 
-  // Opens UPI app WITHOUT pre-filling amount (am=) to avoid "restricted" errors.
-  // UPI apps (GPay, PhonePe) block pre-filled amounts from web sources.
-  // Amount is shown on screen so users enter it manually in the app.
-  const openUpiApp = (app: string) => {
-    // No amount param — prevents security restriction in UPI apps
-    const params = `pa=${upiId}&pn=${payeeName}&cu=INR&tn=${txnNote}`;
-    let url = `upi://pay?${params}`;
 
-    // Package-hinted intent for specific apps (Chrome on Android)
-    if (app === "gpay") {
-      url = `intent://pay?${params}#Intent;scheme=upi;package=com.google.android.apps.nbu.paisa.user;end`;
-    } else if (app === "phonepe") {
-      url = `intent://pay?${params}#Intent;scheme=upi;package=com.phonepe.app;end`;
-    } else if (app === "paytm") {
-      url = `intent://pay?${params}#Intent;scheme=upi;package=net.one97.paytm;end`;
-    }
-
-    window.location.href = url;
-  };
 
   return (
     <div className="w-full">
@@ -229,6 +296,7 @@ export default function RegistrationForm({ onSuccessCallback }: RegistrationForm
                 Enter your details to reserve your spot in Phase 1: Tech Bootcamp
               </p>
             </div>
+
 
             {error && (
               <div className="flex items-center gap-2 px-3 py-2.5 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 font-exo text-xs">
@@ -266,7 +334,10 @@ export default function RegistrationForm({ onSuccessCallback }: RegistrationForm
                   placeholder="WhatsApp Number"
                   required
                   value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
+                  onChange={(e) => {
+                    const val = e.target.value.replace(/\D/g, "");
+                    if (val.length <= 10) setPhone(val);
+                  }}
                   className="w-full bg-slate-950/60 border rounded-xl pl-10 pr-4 py-2.5 font-exo text-sm text-slate-100 placeholder:text-slate-500 outline-none transition-all border-white/5"
                   style={{ borderColor: "rgba(255, 255, 255, 0.06)" }}
                   onFocus={(e) => (e.target.style.borderColor = color)}
@@ -323,10 +394,19 @@ export default function RegistrationForm({ onSuccessCallback }: RegistrationForm
                   style={{ borderColor: "rgba(255, 255, 255, 0.06)" }}
                 >
                   <option value="Computer Science & Engineering">CSE</option>
+                  <option value="Computer Science & Engineering (Cyber Security)">CSE (Cyber Security)</option>
+                  <option value="Computer Science & Engineering (AI & ML)">CSE (AI & ML)</option>
+                  <option value="Artificial Intelligence & Data Science">AI & DS</option>
+                  <option value="Information Technology">Information Technology</option>
                   <option value="Electronics & Communication Engineering">ECE</option>
                   <option value="Electrical & Electronics Engineering">EEE</option>
+                  <option value="Electrical & Computer Engineering">Electrical & Computer Eng</option>
+                  <option value="Robotics & Automation">Robotics & Automation</option>
                   <option value="Civil Engineering">Civil Eng</option>
                   <option value="Mechanical Engineering">Mech Eng</option>
+                  <option value="Biomedical Engineering">Biomedical Eng</option>
+                  <option value="Chemical Engineering">Chemical Eng</option>
+                  <option value="Safety & Fire Engineering">Safety & Fire Eng</option>
                   <option value="Other">Other Dept</option>
                 </select>
               </div>
@@ -409,14 +489,24 @@ export default function RegistrationForm({ onSuccessCallback }: RegistrationForm
             {/* Next button */}
             <button
               type="submit"
-              className="w-full py-3 rounded-full font-orbitron font-bold text-xs sm:text-sm uppercase tracking-wider text-slate-950 active:scale-[0.98] transition-all select-none cursor-pointer flex items-center justify-center gap-2 mt-4"
+              disabled={validatingIeee}
+              className="w-full py-3 rounded-full font-orbitron font-bold text-xs sm:text-sm uppercase tracking-wider text-slate-950 active:scale-[0.98] transition-all disabled:opacity-50 select-none cursor-pointer flex items-center justify-center gap-2 mt-4"
               style={{
                 background: `linear-gradient(135deg, #ffffff 0%, ${color} 100%)`,
                 boxShadow: `0 4px 15px ${color}33`,
               }}
             >
-              <span>Proceed to Payment (₹{priceInfo.price})</span>
-              <ArrowRight size={15} />
+              {validatingIeee ? (
+                <>
+                  <div className="w-4 h-4 border-2 border-slate-950 border-t-transparent rounded-full animate-spin" />
+                  <span>Verifying IEEE ID...</span>
+                </>
+              ) : (
+                <>
+                  <span>Proceed to Payment</span>
+                  <ArrowRight size={15} />
+                </>
+              )}
             </button>
           </motion.form>
         )}
@@ -498,112 +588,76 @@ export default function RegistrationForm({ onSuccessCallback }: RegistrationForm
                 />
               </div>
 
-              {/* Direct UPI App Chooser - Only visible on Mobile Devices */}
-              {isMobile ? (
-                <div className="w-full mt-4 flex flex-col gap-2">
-                  {/* Amount reminder — since we don't pre-fill in app */}
-                  <div className="w-full px-3 py-2 rounded-xl text-center" style={{ background: `${color}10`, border: `1px solid ${color}30` }}>
-                    <span className="font-exo text-[10px] text-slate-300 block leading-normal">
-                      Enter <strong className="font-orbitron" style={{ color }}>₹{priceInfo.price}</strong> as the amount when the app opens
-                    </span>
-                  </div>
-                  <span className="font-rajdhani text-[10px] tracking-wider text-slate-400 font-bold uppercase text-center block">
-                    Open UPI App to Pay
+              <div className="w-full mt-4 flex flex-col gap-2">
+                <div className="w-full px-3 py-2 rounded-xl text-center" style={{ background: `${color}10`, border: `1px solid ${color}30` }}>
+                  <span className="font-exo text-[10px] text-slate-300 block leading-normal">
+                    Please pay the exact amount: <strong className="font-orbitron" style={{ color }}>₹{priceInfo.price}</strong>
                   </span>
-                  
-                  <div className="grid grid-cols-2 gap-2">
-                    <button
-                      type="button"
-                      onClick={() => openUpiApp("gpay")}
-                      className="py-2.5 rounded-xl text-[10px] font-orbitron font-bold text-center border bg-slate-950 hover:bg-slate-900 transition-all active:scale-[0.98] cursor-pointer flex items-center justify-center gap-1.5 text-slate-200"
-                      style={{ borderColor: "rgba(255, 255, 255, 0.05)" }}
-                      onMouseEnter={e => { e.currentTarget.style.borderColor = color }}
-                      onMouseLeave={e => { e.currentTarget.style.borderColor = "rgba(255, 255, 255, 0.05)" }}
-                    >
-                      Google Pay
-                    </button>
-                    
-                    <button
-                      type="button"
-                      onClick={() => openUpiApp("phonepe")}
-                      className="py-2.5 rounded-xl text-[10px] font-orbitron font-bold text-center border bg-slate-950 hover:bg-slate-900 transition-all active:scale-[0.98] cursor-pointer flex items-center justify-center gap-1.5 text-slate-200"
-                      style={{ borderColor: "rgba(255, 255, 255, 0.05)" }}
-                      onMouseEnter={e => { e.currentTarget.style.borderColor = color }}
-                      onMouseLeave={e => { e.currentTarget.style.borderColor = "rgba(255, 255, 255, 0.05)" }}
-                    >
-                      PhonePe
-                    </button>
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-2">
-                    <button
-                      type="button"
-                      onClick={() => openUpiApp("paytm")}
-                      className="py-2.5 rounded-xl text-[10px] font-orbitron font-bold text-center border bg-slate-950 hover:bg-slate-900 transition-all active:scale-[0.98] cursor-pointer flex items-center justify-center gap-1.5 text-slate-200"
-                      style={{ borderColor: "rgba(255, 255, 255, 0.05)" }}
-                      onMouseEnter={e => { e.currentTarget.style.borderColor = color }}
-                      onMouseLeave={e => { e.currentTarget.style.borderColor = "rgba(255, 255, 255, 0.05)" }}
-                    >
-                      Paytm
-                    </button>
-
-                    <button
-                      type="button"
-                      onClick={() => openUpiApp("other")}
-                      className="py-2.5 rounded-xl text-[10px] font-orbitron font-bold text-center border bg-slate-950 hover:bg-slate-900 transition-all active:scale-[0.98] cursor-pointer flex items-center justify-center gap-1.5 text-slate-200"
-                      style={{ borderColor: "rgba(255, 255, 255, 0.05)" }}
-                      onMouseEnter={e => { e.currentTarget.style.borderColor = color }}
-                      onMouseLeave={e => { e.currentTarget.style.borderColor = "rgba(255, 255, 255, 0.05)" }}
-                    >
-                      Other UPI App
-                    </button>
-                  </div>
                 </div>
-              ) : (
-                <div className="w-full mt-3 px-2 py-1.5 rounded-xl bg-slate-950/40 border border-white/5 text-center">
+                <div className="w-full px-2 py-1.5 rounded-xl bg-slate-950/40 border border-white/5 text-center">
                   <span className="font-exo text-[10px] text-slate-400 leading-relaxed block">
-                    Scan this QR code using <strong>GPay</strong>, <strong>PhonePe</strong>, or <strong>Paytm</strong> on your mobile phone to pay.
+                    Scan this QR code (or take a screenshot and scan from gallery) to pay.
                   </span>
                 </div>
-              )}
+              </div>
 
-              {/* Copy UPI ID */}
-              <button
-                type="button"
-                onClick={copyUpiId}
-                className="mt-3 flex items-center gap-2 px-3 py-1.5 rounded-lg border transition-all cursor-pointer text-[10px] font-mono"
-                style={{
-                  borderColor: copied ? `${color}60` : "rgba(255,255,255,0.08)",
-                  background: copied ? `${color}10` : "rgba(255,255,255,0.03)",
-                  color: copied ? color : "#94a3b8",
-                }}
-              >
-                {copied ? (
-                  <><Check size={11} /> <span>Copied!</span></>
-                ) : (
-                  <><QrCode size={11} /> <span>{upiId}</span> <span className="text-slate-600 font-exo">tap to copy</span></>
-                )}
-              </button>
-            </div>
-
-            {/* UTR Input */}
-            <div className="flex flex-col gap-1.5">
+                    {/* Screenshot Upload */}
+            <div className="flex flex-col gap-2">
               <label className="font-rajdhani text-xs tracking-wider text-slate-400 font-bold uppercase">
-                UPI UTR / Transaction ID (12 Digits)
+                Payment Screenshot (Proof of Payment)
               </label>
-              <input
-                type="text"
-                placeholder="Enter 12-Digit Reference No."
-                required
-                maxLength={12}
-                value={utr}
-                onChange={(e) => setUtr(e.target.value.replace(/\D/g, ""))} // Only digits
-                className="w-full bg-slate-950/60 border rounded-xl px-4 py-2.5 font-exo text-sm text-center text-slate-100 placeholder:text-slate-600 outline-none transition-all border-white/5 font-mono tracking-widest"
-                style={{ borderColor: "rgba(255, 255, 255, 0.06)" }}
-                onFocus={(e) => (e.target.style.borderColor = color)}
-                onBlur={(e) => (e.target.style.borderColor = "rgba(255, 255, 255, 0.06)")}
-              />
-            </div>
+              
+              <div className="relative group">
+                <input
+                  type="file"
+                  id="screenshot-upload"
+                  accept="image/png, image/jpeg, image/jpg"
+                  required
+                  onChange={handleFileChange}
+                  className="hidden"
+                />
+                <label
+                  htmlFor="screenshot-upload"
+                  className="flex flex-col items-center justify-center border-2 border-dashed rounded-2xl p-5 cursor-pointer transition-all bg-[#020617]/40 group-hover:bg-[#020617]/70 relative overflow-hidden"
+                  style={{
+                    borderColor: screenshotPreview ? color : "rgba(255, 255, 255, 0.06)",
+                    boxShadow: screenshotPreview ? `0 0 15px -3px ${color}25` : "none"
+                  }}
+                >
+                  {screenshotPreview ? (
+                    <div className="flex flex-col items-center gap-2">
+                      <div className="w-20 h-20 relative rounded-lg overflow-hidden border border-white/10 bg-black/40 flex items-center justify-center">
+                        <img
+                          src={screenshotPreview}
+                          alt="Screenshot preview"
+                          className="max-w-full max-h-full object-contain"
+                        />
+                      </div>
+                      <span className="font-exo text-[11px] text-slate-300 font-medium truncate max-w-[200px]">
+                        {screenshotFileName}
+                      </span>
+                      <span className="font-orbitron text-[9px] uppercase tracking-wider font-bold text-slate-500 hover:text-white transition-colors">
+                        Tap to change
+                      </span>
+                    </div>
+                  ) : (
+                    <div className="flex flex-col items-center gap-2 text-center">
+                      <div className="w-10 h-10 rounded-xl flex items-center justify-center bg-white/[0.02] border border-white/5 group-hover:scale-105 transition-transform duration-300">
+                        <UploadCloud size={18} style={{ color }} />
+                      </div>
+                      <div>
+                        <span className="font-orbitron text-xs font-bold text-slate-200 block">
+                          Upload Screenshot
+                        </span>
+                        <span className="font-exo text-[10px] text-slate-500 mt-1 block">
+                          JPEG, JPG or PNG (max 5MB)
+                        </span>
+                      </div>
+                    </div>
+                  )}
+                </label>
+              </div>
+            </div>      </div>
 
             {/* Final Submit button */}
             <button
@@ -616,7 +670,10 @@ export default function RegistrationForm({ onSuccessCallback }: RegistrationForm
               }}
             >
               {loading ? (
-                <div className="w-5 h-5 border-2 border-slate-950 border-t-transparent rounded-full animate-spin" />
+                <>
+                  <div className="w-5 h-5 border-2 border-slate-950 border-t-transparent rounded-full animate-spin" />
+                  <span>Processing... Do not refresh</span>
+                </>
               ) : (
                 <>
                   <ShieldCheck size={16} />

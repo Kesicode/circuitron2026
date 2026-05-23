@@ -9,7 +9,10 @@ export interface RegistrationData {
   ieeeId?: string;
   regType: string;
   amount: number;
-  utr: string;
+  utr?: string;
+  screenshotBase64?: string;
+  screenshotMimeType?: string;
+  screenshotFileName?: string;
 }
 
 export async function submitNotification(data: RegistrationData) {

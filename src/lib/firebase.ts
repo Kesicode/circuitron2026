@@ -2,7 +2,7 @@ import { initializeApp, getApps, getApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyAcE0TtsEEavmOcnmkm_ve6LL8WI2NH_Ss",
+  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY || "AIzaSyAcE0TtsEEavmOcnmkm_ve6LL8WI2NH_Ss",
   authDomain: "circuit-digest-19-05-26.firebaseapp.com",
   projectId: "circuit-digest-19-05-26",
   storageBucket: "circuit-digest-19-05-26.firebasestorage.app",

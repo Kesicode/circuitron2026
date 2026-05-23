@@ -98,6 +98,7 @@ export default function HeroSection() {
                 fontWeight:900, 
                 fontSize:"clamp(1.7rem, 7.5vw, 5.5rem)", 
                 letterSpacing:".04em",
+                marginRight:"-0.04em",
                 ["--active-color" as any]: color,
                 ["--active-color-dim" as any]: `${color}2e`
               }}>
@@ -128,17 +129,20 @@ export default function HeroSection() {
                 <div 
                   key={word} 
                   className={`flex items-center justify-center select-none font-orbitron uppercase font-black ${
-                    wIdx === 0 
-                      ? "text-lg min-[360px]:text-xl sm:text-3xl md:text-4xl lg:text-5xl" 
-                      : "text-3xl sm:text-5xl md:text-6xl lg:text-[5rem] mt-1 sm:mt-2"
+                    wIdx === 0 ? "" : "mt-1 sm:mt-2"
                   }`}
+                  style={{
+                    fontSize: wIdx === 0 
+                      ? "clamp(1.125rem, 4.5vw, 3rem)" 
+                      : "clamp(1.875rem, 8vw, 5rem)"
+                  }}
                 >
                   {word.split("").map((char, cIdx) => {
                     const i = prevCharsLength + cIdx;
                     return (
                       <motion.span 
                         key={`${char}-${i}`} 
-                        className="inline-block mr-[0.05em] sm:mr-[0.1em] last:mr-0 origin-bottom"
+                        className="inline-block mr-[0.05em] sm:mr-[0.1em] last:mr-0 sm:last:mr-0 origin-bottom"
                         style={{
                           background: `linear-gradient(to bottom, #ffffff 30%, ${color} 100%)`,
                           WebkitBackgroundClip: "text",

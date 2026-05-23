@@ -9,7 +9,7 @@ export const SITE_CONFIG = {
   chapters:       ["IEEE IAS", "IEEE RAS"],
 
   // --- UPI & WhatsApp ---
-  upiId:         "adwaithadwaith2016@oksbi",
+  upiId:         "paytm.s1wsfli@pty",
   whatsappLink:  "https://chat.whatsapp.com/I6C7QPjdoEs55ptG1J1RkT",
 
   // --- Registration ---
@@ -37,7 +37,7 @@ export const SITE_CONFIG = {
   showAnnouncement: true,
 
   // --- Google Sheets Integration ---
-  googleScriptUrl: "https://script.google.com/macros/s/AKfycbxcH58uOfxU9fftJQr7wVeFRk6Gwa1EHmletgbeRR_3pPWMIjFYy16PTNM4zYH4Wg7F6g/exec",
+  googleScriptUrl: process.env.GOOGLE_SCRIPT_URL || "https://script.google.com/macros/s/AKfycbyptA80mwsrbLp6sEpr0n1G7BtqOS9iVT51hUped1lR13Q7uCXnBOm7QPfljsl7N5_hWQ/exec",
 };
 
 // Stub for future Firebase integration
