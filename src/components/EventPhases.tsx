@@ -196,7 +196,7 @@ export default function EventPhases() {
                             initial="hidden" whileInView="visible" viewport={{ once: true }}
                             variants={fadeUp}
                             onClick={() => setSelectedTopic(isSelected ? null : topic)}
-                            className="group/item flex flex-col gap-3 p-3.5 rounded-xl border border-blue-800/30 border-t-blue-400/20 bg-blue-950/20 backdrop-blur-md shadow-lg hover:bg-blue-900/30 transition-all duration-300 cursor-pointer overflow-hidden"
+                            className="group/item flex flex-col gap-3 p-3.5 rounded-xl border border-white/10 border-t-white/20 border-l-white/10 bg-white/5 bg-gradient-to-br from-white/[0.05] to-transparent backdrop-blur-xl shadow-lg hover:bg-white/10 transition-all duration-300 cursor-pointer overflow-hidden"
                             whileHover={{ scale: isSelected ? 1 : 1.02, borderColor: `${color}60` }}
                           >
                             <div className="flex items-start gap-3">
