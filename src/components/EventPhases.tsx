@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   Cpu, Lock, Calendar, Wifi, Zap, Code2, Radio,
   Cloud, BookOpen, Users, Clock, MonitorSmartphone,
@@ -17,12 +17,12 @@ const fadeUp = {
 };
 
 const CURRICULUM = [
-  { icon: Cpu,              label: "Microcontrollers",     desc: "Arduino & ESP32 from scratch" },
-  { icon: Zap,              label: "Circuit Interfacing",  desc: "Sensors, actuators & GPIO" },
-  { icon: Radio,            label: "Wireless Protocols",   desc: "Bluetooth, Wi-Fi & UART" },
-  { icon: Cloud,            label: "Cloud & IoT",          desc: "MQTT, dashboards & data" },
-  { icon: Code2,            label: "Embedded C/C++",       desc: "Programming for hardware" },
-  { icon: Wifi,             label: "IoT Projects",         desc: "End-to-end build & deploy" },
+  { icon: Cpu,              label: "Microcontrollers",     desc: "Arduino & ESP32 from scratch", details: "Learn the architecture of ESP32 and Arduino UNO. Understand GPIO, memory management, and how to flash code using Arduino IDE." },
+  { icon: Zap,              label: "Circuit Interfacing",  desc: "Sensors, actuators & GPIO", details: "Master the art of connecting external components. We cover pull-up/down resistors, ADC, PWM, and interfacing with various sensors (temperature, motion, light)." },
+  { icon: Radio,            label: "Wireless Protocols",   desc: "Bluetooth, Wi-Fi & UART", details: "Deep dive into communication. Learn how to transmit data wirelessly using Wi-Fi (ESP32) and Bluetooth Low Energy (BLE), as well as serial UART communication." },
+  { icon: Cloud,            label: "Cloud & IoT",          desc: "MQTT, dashboards & data", details: "Connect your hardware to the internet. We'll set up an MQTT broker, send telemetry data to a cloud dashboard, and trigger remote commands." },
+  { icon: Code2,            label: "Embedded C/C++",       desc: "Programming for hardware", details: "Write efficient code for constrained devices. Topics include pointers, structs, interrupt service routines (ISRs), and non-blocking code logic." },
+  { icon: Wifi,             label: "IoT Projects",         desc: "End-to-end build & deploy", details: "Put it all together. You'll build a smart home automation node or a weather station, taking it from breadboard prototype to a fully deployed IoT system." },
 ];
 
 const HIGHLIGHTS = [
@@ -45,6 +45,7 @@ export default function EventPhases() {
   const [statusText, setStatusText] = useState("UPCOMING");
   const [pulse, setPulse] = useState(false);
   const [countdown, setCountdown] = useState("");
+  const [selectedTopic, setSelectedTopic] = useState<typeof CURRICULUM[0] | null>(null);
 
   useEffect(() => {
     const updateStatus = () => {
@@ -182,27 +183,31 @@ export default function EventPhases() {
                   </span>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  {CURRICULUM.map(({ icon: Icon, label, desc }, i) => (
-                    <motion.div
-                      key={label}
-                      custom={i * 0.5 + 2}
-                      initial="hidden" whileInView="visible" viewport={{ once: true }}
-                      variants={fadeUp}
-                      className="group/item flex items-start gap-3 p-3.5 rounded-xl border border-white/5 bg-slate-950/40 hover:bg-slate-900/60 transition-all duration-300"
-                      whileHover={{ scale: 1.02, borderColor: `${color}40` }}
-                    >
-                      <div
-                        className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0 mt-0.5 transition-all duration-300 group-hover/item:shadow-[0_0_15px_-3px_var(--glow-color)]"
-                        style={{ background: `${color}15`, border: `1px solid ${color}25`, '--glow-color': color } as any}
+                  {CURRICULUM.map((topic, i) => {
+                    const { icon: Icon, label, desc } = topic;
+                    return (
+                      <motion.div
+                        key={label}
+                        custom={i * 0.5 + 2}
+                        initial="hidden" whileInView="visible" viewport={{ once: true }}
+                        variants={fadeUp}
+                        onClick={() => setSelectedTopic(topic)}
+                        className="group/item flex items-start gap-3 p-3.5 rounded-xl border border-white/5 bg-slate-950/40 hover:bg-slate-900/60 transition-all duration-300 cursor-pointer"
+                        whileHover={{ scale: 1.02, borderColor: `${color}40` }}
                       >
-                        <Icon size={14} style={{ color }} className="transition-transform duration-300 group-hover/item:scale-110" />
-                      </div>
-                      <div>
-                        <p className="font-orbitron text-[11px] font-bold text-slate-200 tracking-wide leading-tight group-hover/item:text-white transition-colors">{label}</p>
-                        <p className="font-exo text-[10px] text-slate-500 mt-0.5 leading-normal group-hover/item:text-slate-400 transition-colors">{desc}</p>
-                      </div>
-                    </motion.div>
-                  ))}
+                        <div
+                          className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0 mt-0.5 transition-all duration-300 group-hover/item:shadow-[0_0_15px_-3px_var(--glow-color)]"
+                          style={{ background: `${color}15`, border: `1px solid ${color}25`, '--glow-color': color } as any}
+                        >
+                          <Icon size={14} style={{ color }} className="transition-transform duration-300 group-hover/item:scale-110" />
+                        </div>
+                        <div>
+                          <p className="font-orbitron text-[11px] font-bold text-slate-200 tracking-wide leading-tight group-hover/item:text-white transition-colors">{label}</p>
+                          <p className="font-exo text-[10px] text-slate-500 mt-0.5 leading-normal group-hover/item:text-slate-400 transition-colors">{desc}</p>
+                        </div>
+                      </motion.div>
+                    );
+                  })}
                 </div>
               </div>
 
@@ -330,6 +335,58 @@ export default function EventPhases() {
         </motion.div>
 
       </div>
+
+      {/* Curriculum Detail Modal */}
+      <AnimatePresence>
+        {selectedTopic && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center px-4">
+            <motion.div 
+              initial={{ opacity: 0 }} 
+              animate={{ opacity: 1 }} 
+              exit={{ opacity: 0 }} 
+              className="absolute inset-0 bg-slate-950/80 backdrop-blur-sm cursor-pointer"
+              onClick={() => setSelectedTopic(null)}
+            />
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 20 }}
+              className="relative z-10 w-full max-w-md bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl p-6 sm:p-8 overflow-hidden"
+            >
+              <div className="absolute top-0 left-0 w-full h-1" style={{ background: `linear-gradient(90deg, transparent, ${color}, transparent)` }} />
+              
+              <button 
+                onClick={() => setSelectedTopic(null)}
+                className="absolute top-4 right-4 text-slate-400 hover:text-white transition-colors"
+              >
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+              </button>
+
+              <div className="flex items-center gap-4 mb-6">
+                <div
+                  className="w-12 h-12 rounded-xl flex items-center justify-center shrink-0"
+                  style={{ background: `${color}15`, border: `1px solid ${color}25` }}
+                >
+                  <selectedTopic.icon size={24} style={{ color }} />
+                </div>
+                <div>
+                  <h3 className="font-orbitron text-lg font-bold text-slate-100 tracking-wide">
+                    {selectedTopic.label}
+                  </h3>
+                  <p className="font-rajdhani text-xs tracking-wider text-slate-400 uppercase font-semibold mt-1">
+                    {selectedTopic.desc}
+                  </p>
+                </div>
+              </div>
+              
+              <p className="font-exo text-slate-300 leading-relaxed text-sm">
+                {selectedTopic.details}
+              </p>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+
     </section>
   );
 }
