@@ -87,14 +87,26 @@ export default function CircuitBackground() {
       ctx.strokeStyle = lineGrad;
       ctx.lineWidth = .85;
 
+      // Helper to get drifted position
+      const getPos = (node: Node) => {
+        const driftAmount = isMobile ? 4 : 8;
+        return {
+          x: node.x + Math.sin(t + node.phase) * driftAmount,
+          y: node.y + Math.cos(t * 0.8 + node.phase) * driftAmount
+        };
+      };
+
       // 2. Draw connections (straight routing)
       nodes.forEach(n => {
+        const p1 = getPos(n);
         n.connections.forEach(j => {
-          const m = nodes[j];
+          const p2 = getPos(nodes[j]);
           ctx.beginPath();
-          ctx.moveTo(n.x, n.y);
-          const mx = n.x+(m.x-n.x)*.5;
-          ctx.lineTo(mx, n.y); ctx.lineTo(mx, m.y); ctx.lineTo(m.x, m.y);
+          ctx.moveTo(p1.x, p1.y);
+          const midX = p1.x + (p2.x - p1.x) * 0.5;
+          ctx.lineTo(midX, p1.y); 
+          ctx.lineTo(midX, p2.y); 
+          ctx.lineTo(p2.x, p2.y);
           ctx.stroke();
         });
       });
@@ -107,9 +119,10 @@ export default function CircuitBackground() {
 
       // 4. Draw dots
       nodes.forEach(n => {
+        const p1 = getPos(n);
         const dotPulse = (Math.sin(t*1.3+n.phase)+1)/2;
         ctx.beginPath();
-        ctx.arc(n.x, n.y, (isMobile ? .8 : 1) + dotPulse*(isMobile ? .8 : 1.5), 0, Math.PI*2);
+        ctx.arc(p1.x, p1.y, (isMobile ? .8 : 1) + dotPulse*(isMobile ? .8 : 1.5), 0, Math.PI*2);
         ctx.fill();
       });
     };
