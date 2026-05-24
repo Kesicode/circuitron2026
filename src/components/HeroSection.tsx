@@ -30,9 +30,10 @@ export default function HeroSection() {
   
   const [statusText, setStatusText] = useState("PRE-REGISTRATION LIVE");
   const [ctaActive, setCtaActive] = useState(true);
+  const [timeLeft, setTimeLeft] = useState<{ days: string; hours: string; minutes: string; seconds: string } | null>(null);
 
   useEffect(() => {
-    const updateHeroStatus = () => {
+    const updateHeroStatusAndTimer = () => {
       const now = new Date().getTime();
       const preStart = new Date("2026-05-24T00:00:00+05:30").getTime();
       const preEnd = new Date("2026-05-25T23:59:59+05:30").getTime();
@@ -55,10 +56,27 @@ export default function HeroSection() {
         setStatusText("REGISTRATION CLOSED");
         setCtaActive(false);
       }
+
+      const diff = regEnd - now;
+      if (diff > 0) {
+        const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+        const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+        const s = Math.floor((diff % (1000 * 60)) / 1000);
+
+        setTimeLeft({
+          days: String(d).padStart(2, "0"),
+          hours: String(h).padStart(2, "0"),
+          minutes: String(m).padStart(2, "0"),
+          seconds: String(s).padStart(2, "0"),
+        });
+      } else {
+        setTimeLeft(null);
+      }
     };
 
-    updateHeroStatus();
-    const interval = setInterval(updateHeroStatus, 1000 * 60); // Check every minute
+    updateHeroStatusAndTimer();
+    const interval = setInterval(updateHeroStatusAndTimer, 1000); // Check every second
     return () => clearInterval(interval);
   }, []);
 
@@ -170,6 +188,44 @@ export default function HeroSection() {
               );
             })}
           </motion.div>
+
+          {/* Countdown Timer */}
+          {timeLeft && (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.8, delay: 0.95, ease: [.16,1,.3,1] }}
+              className="mt-6 mb-2 flex flex-col items-center gap-3"
+            >
+              <span className="font-orbitron text-[9px] sm:text-[10px] font-bold tracking-[0.2em] text-slate-400 uppercase select-none">
+                Registration Closes on May 30
+              </span>
+              <div 
+                className="flex items-center gap-3 sm:gap-4 bg-slate-950/60 border border-white/5 backdrop-blur-md px-5 sm:px-6 py-2.5 sm:py-3.5 rounded-2xl"
+                style={{ boxShadow: `0 0 25px ${color}12` }}
+              >
+                <div className="flex flex-col items-center w-10 sm:w-12">
+                  <span className="font-orbitron font-black text-lg sm:text-2xl text-slate-100 tracking-wide">{timeLeft.days}</span>
+                  <span className="font-exo text-[8px] sm:text-[9px] text-slate-500 uppercase tracking-widest font-bold mt-0.5">Days</span>
+                </div>
+                <div className="w-px h-6 sm:h-8 bg-white/10" />
+                <div className="flex flex-col items-center w-10 sm:w-12">
+                  <span className="font-orbitron font-black text-lg sm:text-2xl text-slate-100 tracking-wide">{timeLeft.hours}</span>
+                  <span className="font-exo text-[8px] sm:text-[9px] text-slate-500 uppercase tracking-widest font-bold mt-0.5">Hours</span>
+                </div>
+                <div className="w-px h-6 sm:h-8 bg-white/10" />
+                <div className="flex flex-col items-center w-10 sm:w-12">
+                  <span className="font-orbitron font-black text-lg sm:text-2xl text-slate-100 tracking-wide">{timeLeft.minutes}</span>
+                  <span className="font-exo text-[8px] sm:text-[9px] text-slate-500 uppercase tracking-widest font-bold mt-0.5">Mins</span>
+                </div>
+                <div className="w-px h-6 sm:h-8 bg-white/10" />
+                <div className="flex flex-col items-center w-10 sm:w-12">
+                  <span className="font-orbitron font-black text-lg sm:text-2xl tracking-wide" style={{ color }}>{timeLeft.seconds}</span>
+                  <span className="font-exo text-[8px] sm:text-[9px] text-slate-500 uppercase tracking-widest font-bold mt-0.5">Secs</span>
+                </div>
+              </div>
+            </motion.div>
+          )}
 
           {/* Glowing CTA Button */}
           {ctaActive && (
