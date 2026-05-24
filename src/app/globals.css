@@ -14,6 +14,14 @@
   --bg:           #060912;
   --surface:      #0b1221;
   --surface2:     #101828;
+  --card-bg:      rgba(255,255,255,0.025);
+  --nav-bg:       rgba(6,9,18,0.90);
+  --footer-bg:    rgba(6,9,18,0.98);
+  --input-bg:     rgba(2,6,23,0.60);
+  --input-text:   #f8fafc;
+  --input-border: rgba(255,255,255,0.06);
+  --modal-bg:     rgba(10,15,30,0.95);
+  --logo-text:    #e2e8f0;
 
   /* Phase 1 — Bootcamp — Sky Blue */
   --p1:           #38bdf8;
@@ -43,6 +51,25 @@
   --purple:       #a855f7;
   --purple-dim:   rgba(168,85,247,0.10);
   --border-c:     rgba(56,189,248,0.25);
+}
+
+.light {
+  --bg:           #f8fafc;
+  --surface:      #ffffff;
+  --surface2:     #f1f5f9;
+  --card-bg:      rgba(15,23,42,0.02);
+  --nav-bg:       rgba(248,250,252,0.90);
+  --footer-bg:    rgba(241,245,249,0.98);
+  --input-bg:     rgba(241,245,249,0.80);
+  --input-text:   #0f172a;
+  --input-border: rgba(15,23,42,0.08);
+  --modal-bg:     rgba(255,255,255,0.98);
+  --logo-text:    #0f172a;
+  
+  --text:         #0f172a;
+  --muted:        #475569;
+  --dim:          #64748b;
+  --border:       rgba(15,23,42,0.08);
 }
 
 /* ── Base ── */
@@ -172,7 +199,7 @@
 
   /* ─── Cards ─── */
   .cc-card {
-    background: rgba(255,255,255,0.025);
+    background: var(--card-bg);
     border: 1px solid var(--border);
     border-radius: 14px;
     transition: border-color .25s, background .25s, transform .25s;
@@ -183,7 +210,7 @@
     transform: translateY(-3px);
   }
   .cc-card-static {
-    background: rgba(255,255,255,0.025);
+    background: var(--card-bg);
     border: 1px solid var(--border);
     border-radius: 14px;
   }
@@ -421,4 +448,83 @@
 }
 .animate-connect-blink {
   animation: connectBlink 2.2s ease-in-out infinite;
+}
+
+/* ── Light Mode Specific Overrides ── */
+.light input,
+.light select,
+.light textarea {
+  background-color: var(--input-bg) !important;
+  color: var(--input-text) !important;
+  border-color: var(--input-border) !important;
+}
+.light input::placeholder {
+  color: #64748b !important;
+}
+.light select option {
+  background-color: var(--surface) !important;
+  color: var(--text) !important;
+}
+.light .cc-btn-outline {
+  border-color: rgba(15, 23, 42, 0.15);
+}
+.light .cc-btn-outline:hover {
+  border-color: var(--cyan);
+}
+.light .cc-grid {
+  background-image:
+    linear-gradient(rgba(56, 189, 248, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(56, 189, 248, 0.05) 1px, transparent 1px);
+}
+.light .selection-swap-white {
+  color: #0f172a !important;
+}
+.light ::-webkit-scrollbar-track {
+  background: var(--bg);
+}
+.light ::-webkit-scrollbar-thumb {
+  background: rgba(56, 189, 248, 0.2);
+}
+.light ::selection {
+  background: rgba(56, 189, 248, 0.1);
+  color: var(--cyan);
+}
+
+/* Utility overrides for Light Mode */
+.light .text-white,
+.light .text-slate-100 {
+  color: #0f172a !important;
+}
+.light .text-slate-200 {
+  color: #1e293b !important;
+}
+.light .text-slate-300 {
+  color: #334155 !important;
+}
+.light .text-slate-400 {
+  color: #475569 !important;
+}
+.light .text-slate-500 {
+  color: #64748b !important;
+}
+.light .bg-slate-950,
+.light .bg-slate-950\/40,
+.light .bg-slate-950\/60,
+.light .bg-slate-950\/80,
+.light .bg-slate-950\/90,
+.light .bg-[#020617]\/40,
+.light .bg-[#020617]\/70 {
+  background-color: var(--surface2) !important;
+}
+.light .bg-white\/\[0\.02\],
+.light .bg-white\/\[0\.03\],
+.light .bg-white\/\[0\.04\],
+.light .bg-white\/\[0\.08\] {
+  background-color: rgba(15, 23, 42, 0.02) !important;
+}
+.light .border-white\/5,
+.light .border-white\/10,
+.light .border-white\/20,
+.light .border-t-white\/20 {
+  border-color: var(--border) !important;
 }

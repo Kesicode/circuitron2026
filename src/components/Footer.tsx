@@ -30,7 +30,7 @@ export default function Footer() {
   const go = (id:string) => document.querySelector(`#${id.toLowerCase()}`)?.scrollIntoView({ behavior:"smooth" });
 
   return (
-    <footer id="connect" style={{ background:"rgba(6,9,18,.98)", position:"relative" }}>
+    <footer id="connect" style={{ background:"var(--footer-bg)", position:"relative" }}>
       <div className="absolute top-0 left-4 right-4 sm:left-8 sm:right-8 h-px"
         style={{ background:`linear-gradient(90deg, transparent, rgba(255,255,255,.08) 15%, ${color}40 50%, rgba(255,255,255,.08) 85%, transparent)` }} />
 

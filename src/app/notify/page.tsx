@@ -33,10 +33,10 @@ function NotifyForm() {
         <div
           className="w-full max-w-[450px] p-6 sm:p-8 rounded-2xl border"
           style={{
-            background: "rgba(10, 15, 30, 0.75)",
+            background: "var(--modal-bg)",
             backdropFilter: "blur(20px)",
             WebkitBackdropFilter: "blur(20px)",
-            borderColor: "rgba(255, 255, 255, 0.07)",
+            borderColor: "var(--border)",
             boxShadow: `0 20px 40px -15px rgba(0, 0, 0, 0.8), 0 0 30px -10px ${color}20`,
           }}
         >

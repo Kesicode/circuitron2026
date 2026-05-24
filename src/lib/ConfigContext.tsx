@@ -10,17 +10,41 @@ interface ConfigContextProps {
   config: SiteConfig;
   updateConfig: (newConfig: Partial<SiteConfig>) => Promise<void>;
   loading: boolean;
+  theme: "dark" | "light";
+  toggleTheme: () => void;
 }
 
 const ConfigContext = createContext<ConfigContextProps>({
   config: DEFAULT_CONFIG,
   updateConfig: async () => {},
   loading: true,
+  theme: "dark",
+  toggleTheme: () => {},
 });
 
 export const ConfigProvider = ({ children }: { children: React.ReactNode }) => {
   const [config, setConfig] = useState<SiteConfig>(DEFAULT_CONFIG);
   const [loading, setLoading] = useState(true);
+  const [theme, setTheme] = useState<"dark" | "light">("dark");
+
+  useEffect(() => {
+    const savedTheme = localStorage.getItem("theme") as "dark" | "light";
+    if (savedTheme) {
+      setTheme(savedTheme);
+      document.documentElement.classList.add(savedTheme);
+      document.documentElement.classList.remove(savedTheme === "dark" ? "light" : "dark");
+    } else {
+      document.documentElement.classList.add("dark");
+    }
+  }, []);
+
+  const toggleTheme = () => {
+    const nextTheme = theme === "dark" ? "light" : "dark";
+    setTheme(nextTheme);
+    localStorage.setItem("theme", nextTheme);
+    document.documentElement.classList.add(nextTheme);
+    document.documentElement.classList.remove(theme);
+  };
 
   useEffect(() => {
     const configDoc = doc(db, "config", "main");
@@ -52,7 +76,7 @@ export const ConfigProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   return (
-    <ConfigContext.Provider value={{ config, updateConfig, loading }}>
+    <ConfigContext.Provider value={{ config, updateConfig, loading, theme, toggleTheme }}>
       {children}
     </ConfigContext.Provider>
   );

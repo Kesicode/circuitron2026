@@ -261,7 +261,7 @@ export default function HeroSection() {
             <motion.span
               key={c.id}
               variants={childVariants}
-              className={c.highlight ? "text-[#f8fafc] font-medium" : "text-slate-400/85"}
+              className={c.highlight ? "text-slate-100 font-medium" : "text-slate-400/85"}
             >
               {c.char}
             </motion.span>

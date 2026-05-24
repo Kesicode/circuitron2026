@@ -100,10 +100,10 @@ export default function NotifyPopup({ loaded = true }: { loaded?: boolean }) {
             <motion.div
               className="relative w-full max-w-[450px] p-6 sm:p-8 rounded-2xl border my-8"
               style={{
-                background: "rgba(10, 15, 30, 0.95)",
+                background: "var(--modal-bg)",
                 backdropFilter: "blur(20px)",
                 WebkitBackdropFilter: "blur(20px)",
-                borderColor: success ? "#10b98160" : "rgba(255, 255, 255, 0.08)",
+                borderColor: success ? "#10b98160" : "var(--border)",
                 boxShadow: `0 20px 40px -15px rgba(0, 0, 0, 0.9), 0 0 35px -5px ${color}22`,
               }}
               initial={{ opacity: 0, scale: 0.93, y: 24 }}

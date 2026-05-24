@@ -3,13 +3,15 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { Sun, Moon } from "lucide-react";
 import Logo from "./Logo";
 
-import { usePhaseTheme } from "@/lib/ConfigContext";
+import { usePhaseTheme, useSiteConfig } from "@/lib/ConfigContext";
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const { color } = usePhaseTheme();
+  const { theme, toggleTheme } = useSiteConfig();
   const pathname = usePathname();
   const isNotifyPage = pathname === "/notify";
 
@@ -47,9 +49,9 @@ export default function Navbar() {
     }
   };
 
-  const bg   = scrolled ? "rgba(6,9,18,.90)" : "transparent";
+  const bg   = scrolled ? "var(--nav-bg)" : "transparent";
   const blur = scrolled ? "blur(22px)" : "none";
-  const bdr  = scrolled ? "1px solid rgba(255,255,255,.07)" : "1px solid transparent";
+  const bdr  = scrolled ? "1px solid var(--border)" : "1px solid transparent";
 
   return (
     <motion.nav className="fixed top-0 left-0 right-0 z-50"
@@ -104,6 +106,20 @@ export default function Navbar() {
             >
               CONTACT
             </Link>
+            
+            {/* Theme Toggle Button */}
+            <button
+              type="button"
+              onClick={toggleTheme}
+              className="p-1.5 rounded-lg border transition-all cursor-pointer text-slate-400 hover:text-white flex items-center justify-center bg-white/[0.02] border-white/5 active:scale-95 outline-none select-none"
+              style={{
+                borderColor: "var(--border)",
+              }}
+              aria-label="Toggle Theme"
+            >
+              {theme === "dark" ? <Sun size={14} style={{ color }} /> : <Moon size={14} style={{ color }} />}
+            </button>
+
             <Link
               href="/notify"
               onClick={handleRegisterClick}
