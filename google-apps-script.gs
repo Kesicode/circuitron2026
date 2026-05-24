@@ -54,10 +54,10 @@ function doPost(e) {
     // Format name to contain only safe alphanumeric characters and hyphens/underscores
     const cleanName = name.trim().toLowerCase().replace(/\s+/g, "_").replace(/[^a-z0-9_-]/g, "");
     
-    // Determine IEEE status string as requested ("ieee_member" or "non_ieee_member")
-    const ieeeStatus = isIeee ? "ieee_member" : "non_ieee_member";
+    // Determine IEEE status string as requested: "ieee member" or "non ieee member"
+    const ieeeStatus = isIeee ? "ieee member" : "non ieee member";
     
-    // Construct new filename, e.g. "kashi-ieee_member.jpg"
+    // Construct new filename, e.g. "kashi-ieee member.jpg"
     const newFileName = `${cleanName}-${ieeeStatus}.${fileExtension}`;
     
     let fileCellValue = "";
@@ -73,27 +73,33 @@ function doPost(e) {
       file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
       const fileUrl = file.getUrl();
       
-      // Create Hyperlink formula for Google Sheets (makes it show as the filename and clickable)
+      // Create Hyperlink formula for Google Sheets (displays the filename as the link text)
       fileCellValue = `=HYPERLINK("${fileUrl}", "${newFileName}")`;
     }
     
-    // Append details to the Google Sheet (Active sheet in the Spreadsheet)
-    const sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+    // Split timestamp into Date and Time (using script timezone)
     const timestamp = new Date();
+    const timezone = Session.getScriptTimeZone();
+    const formattedDate = Utilities.formatDate(timestamp, timezone, "yyyy-MM-dd");
+    const formattedTime = Utilities.formatDate(timestamp, timezone, "HH:mm:ss");
+    
+    // Append details to the Google Sheet (Active sheet in the Spreadsheet) in the exact order requested:
+    // Date, Time, name, Phone Number, Mail ID, College, Department, Year of Study, IEEE Status, IEEE-ID, Amount, Screenshot
+    const sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
     
     sheet.appendRow([
-      timestamp,
+      formattedDate,
+      formattedTime,
       name,
       phone,
       email,
       college,
       department,
       year,
-      isIeee ? "Yes" : "No",
+      ieeeStatus, // "ieee member" or "non ieee member"
       ieeeId,
-      regType,
       amount,
-      fileCellValue // Displays filename as a hyperlink pointing to the Google Drive file location
+      fileCellValue // Hyperlink formatting pointing to the saved file location in Drive
     ]);
     
     return ContentService.createTextOutput(JSON.stringify({
@@ -120,9 +126,9 @@ function doGet(e) {
       const sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
       const data = sheet.getDataRange().getValues();
       
-      // Assuming IEEE ID is in Column 9 (Index 8 in 0-indexed values)
+      // Assuming IEEE ID is in Column 10 (Index 9 in 0-indexed values: Date, Time, name, Phone Number, Mail ID, College, Department, Year of Study, IEEE Status, IEEE-ID)
       // Adjust this index if your columns are ordered differently
-      const ieeeIdColIndex = 8; 
+      const ieeeIdColIndex = 9; 
       let registered = false;
       
       for (let i = 1; i < data.length; i++) {
