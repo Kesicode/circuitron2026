@@ -104,14 +104,14 @@ export default function HeroSection() {
         style={{ background:"linear-gradient(to top, #060912, transparent)" }} />
 
       {/* ── Content ── */}
-      <div className="cc-container relative z-10 flex flex-col items-center justify-between text-center min-h-[calc(100vh-70px)] pt-12 sm:pt-16 pb-6 px-4 sm:px-6">
+      <div className="cc-container relative z-10 flex flex-col items-center justify-between text-center min-h-[calc(100vh-80px)] pt-10 sm:pt-12 pb-4 px-4 sm:px-6">
 
-        <div className="flex-grow flex flex-col items-center justify-center w-full py-4 mt-4 sm:mt-6">
+        <div className="flex-grow flex flex-col items-center justify-center w-full py-1 mt-1 sm:mt-2">
           {/* ── CIRCUITRON title ── */}
           <motion.div
             initial={{ opacity:0, y:32 }} animate={{ opacity:1, y:0 }}
             transition={{ duration:.85, delay:.2, ease:[.16,1,.3,1] }}>
-            <h1 className="font-rostex leading-none text-center mb-3"
+            <h1 className="font-rostex leading-none text-center mb-2"
               style={{ 
                 fontWeight:900, 
                 fontSize:"clamp(1.7rem, 7.5vw, 5.5rem)", 
@@ -126,7 +126,7 @@ export default function HeroSection() {
           </motion.div>
 
           {/* Divider */}
-          <motion.div className="flex items-center gap-3 my-6 w-32 mx-auto"
+          <motion.div className="flex items-center gap-3 my-4 w-32 mx-auto"
             initial={{ opacity:0, scaleX:0 }} animate={{ opacity:1, scaleX:1 }}
             transition={{ duration:.6, delay:.7, ease:[.16,1,.3,1] }}>
             <div className="flex-1 h-px" style={{ background:"rgba(255,255,255,.07)" }} />
@@ -136,7 +136,7 @@ export default function HeroSection() {
 
           {/* Dynamic Registration Indicator */}
           <motion.div 
-            className="relative mt-8 mb-4 flex flex-col items-center justify-center text-center w-full"
+            className="relative mt-4 mb-2 flex flex-col items-center justify-center text-center w-full"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.85, ease: [.16,1,.3,1] }}
@@ -195,7 +195,7 @@ export default function HeroSection() {
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.8, delay: 0.95, ease: [.16,1,.3,1] }}
-              className="mt-6 mb-2 flex flex-col items-center gap-3"
+              className="mt-4 mb-2 flex flex-col items-center gap-3"
             >
               <span className="font-orbitron text-[9px] sm:text-[10px] font-bold tracking-[0.2em] text-slate-400 uppercase select-none">
                 Registration Closes on May 30
@@ -233,7 +233,7 @@ export default function HeroSection() {
               initial={{ opacity: 0, y: 25 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 1.05, ease: [.16,1,.3,1] }}
-              className="mt-8 mb-2 z-20"
+              className="mt-5 mb-1 z-20"
             >
               <button
                 onClick={() => window.dispatchEvent(new CustomEvent("open-pre-register"))}
@@ -251,7 +251,7 @@ export default function HeroSection() {
         </div>
 
         {/* Subtitle (Description) with Typewriter Effect */}
-        <motion.p className="font-exo font-300 max-w-lg mx-auto mb-0 pt-8 leading-relaxed mt-auto select-none"
+        <motion.p className="font-exo font-300 max-w-lg mx-auto mb-0 pt-3 leading-relaxed mt-auto select-none"
           style={{ fontSize:"clamp(.875rem, 2vw, 1.05rem)" }}
           variants={containerVariants}
           initial="hidden"
@@ -261,7 +261,7 @@ export default function HeroSection() {
             <motion.span
               key={c.id}
               variants={childVariants}
-              className={c.highlight ? "text-slate-100 font-medium" : "text-slate-400/85"}
+              className={c.highlight ? "text-[#f8fafc] font-medium" : "text-slate-400/85"}
             >
               {c.char}
             </motion.span>
