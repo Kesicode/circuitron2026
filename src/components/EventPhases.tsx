@@ -313,7 +313,7 @@ export default function EventPhases() {
               style={{ borderColor: `${color}15` }}
             >
               {[
-                { icon: Users,            val: "Beginner to Moderate",  sub: "Level" },
+                { icon: Users,            val: "Beginner",  sub: "Level" },
                 { icon: MonitorSmartphone, val: "Online",   sub: "Format" },
                 { icon: Layers,           val: "2 Weeks",   sub: "Duration" },
               ].map(({ icon: Icon, val, sub }) => (
