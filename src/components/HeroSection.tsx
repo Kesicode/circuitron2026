@@ -247,26 +247,25 @@ export default function HeroSection() {
               </button>
             </motion.div>
           )}
+          {/* Subtitle (Description) with Typewriter Effect */}
+          <motion.p className="font-exo font-300 max-w-lg mx-auto mb-0 pt-3 leading-relaxed mt-3 sm:mt-6 select-none"
+            style={{ fontSize:"clamp(.875rem, 2vw, 1.05rem)" }}
+            variants={containerVariants}
+            initial="hidden"
+            animate="visible"
+          >
+            {chars.map(c => (
+              <motion.span
+                key={c.id}
+                variants={childVariants}
+                className={c.highlight ? "text-[#f8fafc] font-medium" : "text-slate-400/85"}
+              >
+                {c.char}
+              </motion.span>
+            ))}
+          </motion.p>
 
         </div>
-
-        {/* Subtitle (Description) with Typewriter Effect */}
-        <motion.p className="font-exo font-300 max-w-lg mx-auto mb-0 pt-3 leading-relaxed mt-auto select-none"
-          style={{ fontSize:"clamp(.875rem, 2vw, 1.05rem)" }}
-          variants={containerVariants}
-          initial="hidden"
-          animate="visible"
-        >
-          {chars.map(c => (
-            <motion.span
-              key={c.id}
-              variants={childVariants}
-              className={c.highlight ? "text-[#f8fafc] font-medium" : "text-slate-400/85"}
-            >
-              {c.char}
-            </motion.span>
-          ))}
-        </motion.p>
 
       </div>
     </section>
