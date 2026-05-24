@@ -267,6 +267,51 @@ export default function HeroSection() {
 
         </div>
 
+        {/* Scroll Down Indicator */}
+        <motion.div
+          initial={{ opacity: 0, y: 15 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 2.2, duration: 0.8 }}
+          className="flex flex-col items-center gap-1 mt-auto pt-12 sm:pt-20 mb-4 z-20"
+        >
+          <span className="font-orbitron text-[9px] font-bold tracking-[0.25em] text-slate-500 transition-colors uppercase select-none">
+            Scroll Down
+          </span>
+          <div className="flex flex-col items-center -space-y-1.5 h-10 w-10 justify-center">
+            {[0, 1, 2].map((i) => (
+              <motion.svg
+                key={i}
+                width="16"
+                height="10"
+                viewBox="0 0 16 10"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                custom={i}
+                animate={{
+                  opacity: [0, 1, 0],
+                  y: [-4, 6, 16],
+                }}
+                transition={{
+                  duration: 1.8,
+                  repeat: Infinity,
+                  delay: i * 0.2,
+                  ease: "easeInOut",
+                }}
+              >
+                <path
+                  d="M2 2L8 8L14 2"
+                  stroke={color}
+                  strokeWidth="2.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="opacity-70"
+                  style={{ filter: `drop-shadow(0 0 4px ${color}60)` }}
+                />
+              </motion.svg>
+            ))}
+          </div>
+        </motion.div>
+
       </div>
     </section>
   );
