@@ -248,7 +248,7 @@ export default function HeroSection() {
             </motion.div>
           )}
           {/* Subtitle (Description) with Typewriter Effect */}
-          <motion.p className="font-exo font-300 max-w-lg mx-auto mb-0 pt-3 leading-relaxed mt-3 sm:mt-6 select-none"
+          <motion.p className="font-exo font-300 max-w-lg mx-auto mb-0 pt-3 leading-relaxed mt-6 sm:mt-8 select-none"
             style={{ fontSize:"clamp(.875rem, 2vw, 1.05rem)" }}
             variants={containerVariants}
             initial="hidden"
