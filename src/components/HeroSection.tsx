@@ -146,7 +146,7 @@ export default function HeroSection() {
               return (
                 <div 
                   key={word} 
-                  className={`flex items-center justify-center select-none font-orbitron uppercase font-black ${
+                  className={`flex items-center justify-center select-none font-orbitron uppercase font-extrabold tracking-wider ${
                     wIdx === 0 ? "" : "mt-1 sm:mt-2"
                   }`}
                   style={{
@@ -160,7 +160,7 @@ export default function HeroSection() {
                     return (
                       <motion.span 
                         key={`${char}-${i}`} 
-                        className="inline-block mr-[0.05em] sm:mr-[0.1em] last:mr-0 sm:last:mr-0 origin-bottom"
+                        className="inline-block mr-[0.12em] sm:mr-[0.22em] last:mr-0 sm:last:mr-0 origin-bottom"
                         style={{
                           background: `linear-gradient(to bottom, #ffffff 30%, ${color} 100%)`,
                           WebkitBackgroundClip: "text",

@@ -5,47 +5,23 @@ import { X } from "lucide-react";
 import { usePhaseTheme } from "@/lib/ConfigContext";
 import RegistrationForm from "./RegistrationForm";
 
-let notifyDismissed = false;
-let notifySubmitted = false;
-
 export default function NotifyPopup({ loaded = true }: { loaded?: boolean }) {
   const { color } = usePhaseTheme();
   const [isOpen, setIsOpen] = useState(false);
-  const [scrollTriggered, setScrollTriggered] = useState(false);
   const [success, setSuccess] = useState(false);
 
   useEffect(() => {
-    // 1. Global event listener to open popup manually
+    // Global event listener to open popup manually
     const handleOpenEvent = () => {
       setIsOpen(true);
     };
 
     window.addEventListener("open-pre-register", handleOpenEvent);
-
-    // 2. Scroll trigger auto-opening
-    if (!loaded) return;
-    if (notifyDismissed || notifySubmitted) return;
-
-    let isReady = false;
-    const timer = setTimeout(() => {
-      isReady = true;
-    }, 600);
-
-    const handleScroll = () => {
-      if (isReady && window.scrollY > 300 && !scrollTriggered) {
-        setScrollTriggered(true);
-        setIsOpen(true);
-      }
-    };
-
-    window.addEventListener("scroll", handleScroll, { passive: true });
     
     return () => {
-      clearTimeout(timer);
-      window.removeEventListener("scroll", handleScroll);
       window.removeEventListener("open-pre-register", handleOpenEvent);
     };
-  }, [scrollTriggered, loaded, notifyDismissed, notifySubmitted]);
+  }, []);
 
   // Lock body scroll when popup is open
   useEffect(() => {
@@ -61,12 +37,10 @@ export default function NotifyPopup({ loaded = true }: { loaded?: boolean }) {
 
   const handleClose = () => {
     setIsOpen(false);
-    notifyDismissed = true;
   };
 
   const handleSuccess = () => {
     setSuccess(true);
-    notifySubmitted = true;
     localStorage.setItem("circuitron_notify_success", "true");
     // Auto close modal after 5 seconds to let them click the WhatsApp link
     setTimeout(() => {

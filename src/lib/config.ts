@@ -37,7 +37,7 @@ export const SITE_CONFIG = {
   showAnnouncement: true,
 
   // --- Google Sheets Integration ---
-  googleScriptUrl: process.env.GOOGLE_SCRIPT_URL || "https://script.google.com/macros/s/AKfycbyaE1NZP-MAMnsn4zYng7ms2NlFp7j-MFASFVsE7YmHwo5BstCLnM7fjbXOYRd5DsvVIg/exec",
+  googleScriptUrl: process.env.GOOGLE_SCRIPT_URL || "https://script.google.com/macros/s/AKfycbwhyeHKxZxPCQlfZPEaxJOp6IMksUHvITeNZO4YkEgKpSdHwBjfNz7cvDv_dhDnwtYp2A/exec",
 };
 
 // Stub for future Firebase integration
