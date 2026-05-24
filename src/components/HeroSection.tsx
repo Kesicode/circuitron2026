@@ -104,7 +104,7 @@ export default function HeroSection() {
         style={{ background:"linear-gradient(to top, #060912, transparent)" }} />
 
       {/* ── Content ── */}
-      <div className="cc-container relative z-10 flex flex-col items-center justify-between text-center min-h-[calc(100vh-80px)] pt-10 sm:pt-12 pb-4 px-4 sm:px-6">
+      <div className="cc-container relative z-10 flex flex-col items-center justify-between text-center min-h-[calc(100vh-80px)] pt-10 sm:pt-12 md:pt-40 lg:pt-56 pb-4 px-4 sm:px-6">
 
         <div className="flex-grow flex flex-col items-center justify-center w-full py-1 mt-1 sm:mt-2">
           {/* ── CIRCUITRON title ── */}
@@ -146,13 +146,13 @@ export default function HeroSection() {
               return (
                 <div 
                   key={word} 
-                  className={`flex items-center justify-center select-none font-orbitron uppercase font-extrabold tracking-wider ${
-                    wIdx === 0 ? "" : "mt-1 sm:mt-2"
+                  className={`flex items-center justify-center select-none font-orbitron uppercase font-extrabold tracking-wider leading-[1.05] ${
+                    wIdx === 0 ? "" : "mt-0 sm:mt-0.5"
                   }`}
                   style={{
                     fontSize: wIdx === 0 
-                      ? "clamp(1.125rem, 4.5vw, 3rem)" 
-                      : "clamp(1.875rem, 8vw, 5rem)"
+                      ? "clamp(1rem, 4vw, 2.5rem)" 
+                      : "clamp(1.625rem, 7vw, 4rem)"
                   }}
                 >
                   {word.split("").map((char, cIdx) => {
