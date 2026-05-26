@@ -104,6 +104,26 @@ export default function Footer() {
                 </a>
               ))}
             </div>
+
+            {/* Mentors */}
+            <div className="mt-5 flex flex-col md:items-end">
+              <p className="font-rajdhani font-700 text-[10px] tracking-[.2em] uppercase mb-2 text-slate-500">Mentor Support</p>
+              <div className="flex flex-col gap-1.5 md:items-end">
+                {[
+                  { name: "Devaj A K", link: "https://wa.me/918848718432" },
+                  { name: "Adwaith Krishna S", link: "https://wa.me/917025900705" }
+                ].map(({ name, link }) => (
+                  <a key={name} href={link} target="_blank" rel="noopener noreferrer"
+                    className="flex items-center gap-1.5 font-exo text-xs hover:text-white transition-colors"
+                    style={{ color: "rgba(148,163,184,.5)" }}
+                    onMouseEnter={e => { e.currentTarget.style.color = color; }}
+                    onMouseLeave={e => { e.currentTarget.style.color = "rgba(148,163,184,.5)"; }}>
+                    <span>{name}</span>
+                    <WhatsAppIcon size={11} />
+                  </a>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
 
