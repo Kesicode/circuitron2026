@@ -95,9 +95,9 @@ export default function Navbar() {
               e.preventDefault();
               window.location.href = "/";
             }}
-            className="flex items-center gap-2 cursor-pointer hover:opacity-90 active:scale-95 transition-all text-left outline-none border-none bg-transparent"
+            className="flex items-center gap-1 cursor-pointer hover:opacity-90 active:scale-95 transition-all text-left outline-none border-none bg-transparent"
           >
-            <Logo size={28} />
+            <Logo size={44} />
             {/* Name only shows on screens wider than Mobile L (>425px) */}
             <span className="font-rostex text-sm font-bold tracking-widest hidden min-[480px]:inline-block"
               style={{

@@ -40,6 +40,7 @@ export default function Footer() {
           {/* Brand */}
           <div className="max-w-md">
             <button onClick={() => go("home")} className="flex items-center gap-2.5 mb-2">
+              <img src="/logo-circuitron.png" alt="Circuitron" className="h-7 w-7 object-contain" draggable={false} />
               <span className="font-rostex text-sm font-bold" 
                 style={{ 
                   letterSpacing:".07em",
