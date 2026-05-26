@@ -476,7 +476,7 @@ export default function EventPhases() {
                                   className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0 transition-all duration-300"
                                   style={{ background: `${color}12`, border: `1px solid ${color}20` }}
                                 >
-                                  <Icon size={16} style={{ color }} className="transition-transform duration-500 ease-[0.16,1,0.3,1] group-hover/gitem:scale-115 group-hover/gitem:rotate-[8deg]" />
+                                  <Icon size={16} style={{ color }} />
                                 </div>
                                 <h4 className="font-orbitron text-xs sm:text-sm font-bold text-white tracking-wide">{title}</h4>
                               </div>
