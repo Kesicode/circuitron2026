@@ -33,6 +33,13 @@ export default function Navbar() {
     }
   };
 
+  const handleGuidelinesClick = (e: React.MouseEvent) => {
+    if (!isNotifyPage) {
+      e.preventDefault();
+      window.dispatchEvent(new CustomEvent("show-guidelines"));
+    }
+  };
+
   const handleContactClick = (e: React.MouseEvent) => {
     if (!isNotifyPage) {
       e.preventDefault();
@@ -96,6 +103,13 @@ export default function Navbar() {
               className="hidden sm:block font-orbitron text-[10px] min-[480px]:text-[11px] sm:text-xs font-semibold tracking-wider text-slate-400 hover:text-white transition-colors"
             >
               ABOUT
+            </Link>
+            <Link
+              href="/#guidelines"
+              onClick={handleGuidelinesClick}
+              className="hidden sm:block font-orbitron text-[10px] min-[480px]:text-[11px] sm:text-xs font-semibold tracking-wider text-slate-400 hover:text-white transition-colors"
+            >
+              GUIDELINES
             </Link>
             <Link
               href="/#connect"

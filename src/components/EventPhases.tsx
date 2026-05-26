@@ -4,7 +4,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   Cpu, Lock, Calendar, Wifi, Zap, Code2, Radio,
   Cloud, BookOpen, Users, Clock, MonitorSmartphone,
-  CheckCircle2, ChevronRight, Layers
+  CheckCircle2, ChevronRight, Layers,
+  UserCheck, Timer, Briefcase, Coins, Award
 } from "lucide-react";
 import { usePhaseTheme } from "@/lib/ConfigContext";
 
@@ -14,6 +15,30 @@ const fadeUp = {
     opacity: 1, y: 0,
     transition: { delay: i * 0.1, duration: 0.7, ease: [0.16, 1, 0.3, 1] as const },
   }),
+};
+
+const guideContainer = {
+  hidden: { opacity: 0 },
+  show: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.08,
+      delayChildren: 0.05
+    }
+  }
+};
+
+const guideItem = {
+  hidden: { opacity: 0, y: 20 },
+  show: { 
+    opacity: 1, 
+    y: 0,
+    transition: { 
+      type: "spring" as const,
+      stiffness: 100,
+      damping: 16
+    }
+  }
 };
 
 const CURRICULUM = [
@@ -39,6 +64,39 @@ const SCHEDULE = [
   { week: "Week 2", label: "Jun 08 – Jun 14", title: "ESP 32",  desc: "IoT Systems, Cloud integration & Final Project" },
 ];
 
+const GUIDELINES = [
+  {
+    icon: UserCheck,
+    title: "Daily Attendance & Tasks",
+    desc: "Participants must attend daily sessions regularly and complete all assigned tasks on time.",
+    tag: "ATTENDANCE"
+  },
+  {
+    icon: Timer,
+    title: "Mandatory Quizzes & Deadlines",
+    desc: "Daily mini quizzes and activities are mandatory, and all submissions must be completed before 11:59 PM each day.",
+    tag: "DAILY DEADLINE"
+  },
+  {
+    icon: Briefcase,
+    title: "Weekly Mini Projects",
+    desc: "Participants are required to complete and submit two mini projects (one project per week) within the specified deadlines to be eligible for certification.",
+    tag: "2 PROJECTS"
+  },
+  {
+    icon: Coins,
+    title: "50% Fee Refund",
+    desc: "50% of the registration amount will be refunded upon successful completion of all program requirements, tasks, and project submissions.",
+    tag: "50% REFUND"
+  },
+  {
+    icon: Award,
+    title: "Certification Criteria",
+    desc: "Certificates will be awarded only to participants who successfully complete all daily tasks, quizzes, and mini projects while maintaining timely submissions throughout the program.",
+    tag: "CERTIFICATE"
+  }
+];
+
 export default function EventPhases() {
   const { color } = usePhaseTheme();
 
@@ -46,6 +104,19 @@ export default function EventPhases() {
   const [pulse, setPulse] = useState(false);
   const [countdown, setCountdown] = useState("");
   const [selectedTopic, setSelectedTopic] = useState<typeof CURRICULUM[0] | null>(null);
+  const [activeTab, setActiveTab] = useState<"overview" | "guidelines">("overview");
+
+  useEffect(() => {
+    const handleShowGuidelines = () => {
+      setActiveTab("guidelines");
+      const element = document.getElementById("about");
+      if (element) {
+        element.scrollIntoView({ behavior: "smooth" });
+      }
+    };
+    window.addEventListener("show-guidelines", handleShowGuidelines);
+    return () => window.removeEventListener("show-guidelines", handleShowGuidelines);
+  }, []);
 
   useEffect(() => {
     const updateStatus = () => {
@@ -179,151 +250,252 @@ export default function EventPhases() {
               )}
             </div>
 
-            {/* Main grid: curriculum + highlights */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
+            {/* Tab Navigation */}
+            <div className="flex border-b border-white/10 mb-8 gap-6 relative z-20">
+              <button
+                onClick={() => setActiveTab("overview")}
+                className="pb-3 text-xs sm:text-sm font-orbitron font-bold tracking-wider relative transition-colors duration-300 select-none cursor-pointer outline-none"
+                style={{ color: activeTab === "overview" ? "#f8fafc" : "#64748b" }}
+              >
+                OVERVIEW
+                {activeTab === "overview" && (
+                  <motion.div
+                    layoutId="activeTabUnderline"
+                    className="absolute bottom-0 left-0 right-0 h-0.5 rounded-full"
+                    style={{ background: color }}
+                  />
+                )}
+              </button>
+              <button
+                onClick={() => setActiveTab("guidelines")}
+                className="pb-3 text-xs sm:text-sm font-orbitron font-bold tracking-wider relative transition-colors duration-300 select-none cursor-pointer outline-none"
+                style={{ color: activeTab === "guidelines" ? "#f8fafc" : "#64748b" }}
+              >
+                GUIDELINES
+                {activeTab === "guidelines" && (
+                  <motion.div
+                    layoutId="activeTabUnderline"
+                    className="absolute bottom-0 left-0 right-0 h-0.5 rounded-full"
+                    style={{ background: color }}
+                  />
+                )}
+              </button>
+            </div>
 
-              {/* Left: Curriculum */}
-              <div>
-                <div className="flex items-center gap-2 mb-5">
-                  <BookOpen size={15} style={{ color }} />
-                  <span className="font-rajdhani text-xs tracking-[0.15em] font-bold text-slate-300 uppercase">
-                    What You'll Learn
-                  </span>
-                </div>
-                <div className="flex flex-col sm:flex-row gap-3 items-start">
-                  {[0, 1].map((colIndex) => (
-                    <div key={colIndex} className="flex flex-col gap-3 flex-1 w-full">
-                      {CURRICULUM.filter((_, i) => i % 2 === colIndex).map((topic, i) => {
-                        const { icon: Icon, label, desc, details } = topic;
-                        const isSelected = selectedTopic?.label === label;
-                        const originalIndex = colIndex === 0 ? i * 2 : i * 2 + 1;
-                        return (
-                          <motion.div
-                            key={label}
-                            custom={originalIndex * 0.5 + 2}
-                            initial="hidden" whileInView="visible" viewport={{ once: true }}
-                            variants={fadeUp}
-                            onClick={() => setSelectedTopic(isSelected ? null : topic)}
-                            className="group/item flex flex-col gap-3 p-3.5 rounded-xl border border-white/10 border-t-white/20 bg-white/[0.03] hover:bg-white/[0.08] hover:border-white/20 backdrop-blur-xl shadow-[0_8px_32px_rgba(0,0,0,0.5)] transition-all duration-300 cursor-pointer overflow-hidden"
-                            whileHover={{ scale: isSelected ? 1 : 1.02 }}
-                          >
-                            <div className="flex items-start gap-3">
-                              <div
-                                className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0 mt-0.5 transition-all duration-300 group-hover/item:shadow-[0_0_8px_-3px_var(--glow-color)]"
-                                style={{ background: `${color}15`, border: `1px solid ${color}25`, '--glow-color': color } as any}
-                              >
-                                <Icon size={14} style={{ color }} className="transition-transform duration-300 group-hover/item:scale-110" />
-                              </div>
-                              <div>
-                                <p className="font-orbitron text-[11px] font-bold text-white tracking-wide leading-tight transition-colors">{label}</p>
-                                <p className="font-exo text-[10px] text-slate-400 mt-0.5 leading-normal transition-colors">{desc}</p>
-                              </div>
-                            </div>
-                            <AnimatePresence>
-                              {isSelected && (
+            <AnimatePresence mode="wait">
+              {activeTab === "overview" ? (
+                <motion.div
+                  key="overview"
+                  initial={{ opacity: 0, y: 15 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -15 }}
+                  transition={{ duration: 0.25 }}
+                >
+                  {/* Main grid: curriculum + highlights */}
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
+
+                    {/* Left: Curriculum */}
+                    <div>
+                      <div className="flex items-center gap-2 mb-5">
+                        <BookOpen size={15} style={{ color }} />
+                        <span className="font-rajdhani text-xs tracking-[0.15em] font-bold text-slate-300 uppercase">
+                          What You'll Learn
+                        </span>
+                      </div>
+                      <div className="flex flex-col sm:flex-row gap-3 items-start">
+                        {[0, 1].map((colIndex) => (
+                          <div key={colIndex} className="flex flex-col gap-3 flex-1 w-full">
+                            {CURRICULUM.filter((_, i) => i % 2 === colIndex).map((topic, i) => {
+                              const { icon: Icon, label, desc, details } = topic;
+                              const isSelected = selectedTopic?.label === label;
+                              const originalIndex = colIndex === 0 ? i * 2 : i * 2 + 1;
+                              return (
                                 <motion.div
-                                  initial={{ height: 0, opacity: 0 }}
-                                  animate={{ height: "auto", opacity: 1, marginTop: 4 }}
-                                  exit={{ height: 0, opacity: 0, marginTop: 0 }}
-                                  className="font-exo text-[11px] text-slate-300 leading-relaxed border-t border-white/5 pt-2"
+                                  key={label}
+                                  custom={originalIndex * 0.5 + 2}
+                                  initial="hidden" whileInView="visible" viewport={{ once: true }}
+                                  variants={fadeUp}
+                                  onClick={() => setSelectedTopic(isSelected ? null : topic)}
+                                  className="group/item flex flex-col gap-3 p-3.5 rounded-xl border border-white/10 border-t-white/20 bg-white/[0.03] hover:bg-white/[0.08] hover:border-white/20 backdrop-blur-xl shadow-[0_8px_32px_rgba(0,0,0,0.5)] transition-all duration-300 cursor-pointer overflow-hidden"
+                                  whileHover={{ scale: isSelected ? 1 : 1.02 }}
                                 >
-                                  {details}
+                                  <div className="flex items-start gap-3">
+                                    <div
+                                      className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0 mt-0.5 transition-all duration-300 group-hover/item:shadow-[0_0_8px_-3px_var(--glow-color)]"
+                                      style={{ background: `${color}15`, border: `1px solid ${color}25`, '--glow-color': color } as any}
+                                    >
+                                      <Icon size={14} style={{ color }} className="transition-transform duration-300 group-hover/item:scale-110" />
+                                    </div>
+                                    <div>
+                                      <p className="font-orbitron text-[11px] font-bold text-white tracking-wide leading-tight transition-colors">{label}</p>
+                                      <p className="font-exo text-[10px] text-slate-400 mt-0.5 leading-normal transition-colors">{desc}</p>
+                                    </div>
+                                  </div>
+                                  <AnimatePresence>
+                                    {isSelected && (
+                                      <motion.div
+                                        initial={{ height: 0, opacity: 0 }}
+                                        animate={{ height: "auto", opacity: 1, marginTop: 4 }}
+                                        exit={{ height: 0, opacity: 0, marginTop: 0 }}
+                                        className="font-exo text-[11px] text-slate-300 leading-relaxed border-t border-white/5 pt-2"
+                                      >
+                                        {details}
+                                      </motion.div>
+                                    )}
+                                  </AnimatePresence>
                                 </motion.div>
-                              )}
-                            </AnimatePresence>
-                          </motion.div>
-                        );
-                      })}
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Right: Highlights + Schedule */}
-              <div className="flex flex-col gap-7">
-                {/* Highlights */}
-                <div>
-                  <div className="flex items-center gap-2 mb-4">
-                    <Zap size={15} style={{ color }} />
-                    <span className="font-rajdhani text-xs tracking-[0.15em] font-bold text-slate-300 uppercase">
-                      Program Highlights
-                    </span>
-                  </div>
-                  <ul className="flex flex-col gap-2.5">
-                    {HIGHLIGHTS.map((h, i) => (
-                      <motion.li
-                        key={i}
-                        custom={i * 0.4 + 3}
-                        initial="hidden" whileInView="visible" viewport={{ once: true }}
-                        variants={fadeUp}
-                        className="flex items-start gap-2.5"
-                      >
-                        <CheckCircle2 size={13} className="mt-0.5 shrink-0" style={{ color }} />
-                        <span className="font-exo text-xs text-slate-300 leading-normal">{h}</span>
-                      </motion.li>
-                    ))}
-                  </ul>
-                </div>
-
-                {/* Schedule */}
-                <div>
-                  <div className="flex items-center gap-2 mb-4">
-                    <Calendar size={15} style={{ color }} />
-                    <span className="font-rajdhani text-xs tracking-[0.15em] font-bold text-slate-300 uppercase">
-                      Weekly Schedule
-                    </span>
-                  </div>
-                  <div className="flex flex-col gap-3">
-                    {SCHEDULE.map(({ week, label, title, desc }, i) => (
-                      <motion.div
-                        key={week}
-                        custom={i + 5}
-                        initial="hidden" whileInView="visible" viewport={{ once: true }}
-                        variants={fadeUp}
-                        className="relative flex gap-4 pl-4"
-                      >
-                        {/* Timeline bar */}
-                        <div
-                          className="absolute left-0 top-1.5 w-0.5 h-full rounded-full"
-                          style={{ background: i === 0 ? color : `${color}30` }}
-                        />
-                        <div>
-                          <div className="flex items-center gap-2 mb-0.5">
-                            <span
-                              className="text-[9px] font-orbitron font-bold tracking-widest uppercase px-2 py-0.5 rounded"
-                              style={{ color, background: `${color}15` }}
-                            >
-                              {week}
-                            </span>
-                            <span className="text-[10px] font-exo text-slate-500">{label}</span>
+                              );
+                            })}
                           </div>
-                          <p className="font-orbitron text-xs font-bold text-slate-200">{title}</p>
-                          <p className="font-exo text-[11px] text-slate-400 mt-0.5 leading-normal">{desc}</p>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Right: Highlights + Schedule */}
+                    <div className="flex flex-col gap-7">
+                      {/* Highlights */}
+                      <div>
+                        <div className="flex items-center gap-2 mb-4">
+                          <Zap size={15} style={{ color }} />
+                          <span className="font-rajdhani text-xs tracking-[0.15em] font-bold text-slate-300 uppercase">
+                            Program Highlights
+                          </span>
                         </div>
-                      </motion.div>
+                        <ul className="flex flex-col gap-2.5">
+                          {HIGHLIGHTS.map((h, i) => (
+                            <motion.li
+                              key={i}
+                              custom={i * 0.4 + 3}
+                              initial="hidden" whileInView="visible" viewport={{ once: true }}
+                              variants={fadeUp}
+                              className="flex items-start gap-2.5"
+                            >
+                              <CheckCircle2 size={13} className="mt-0.5 shrink-0" style={{ color }} />
+                              <span className="font-exo text-xs text-slate-300 leading-normal">{h}</span>
+                            </motion.li>
+                          ))}
+                        </ul>
+                      </div>
+
+                      {/* Schedule */}
+                      <div>
+                        <div className="flex items-center gap-2 mb-4">
+                          <Calendar size={15} style={{ color }} />
+                          <span className="font-rajdhani text-xs tracking-[0.15em] font-bold text-slate-300 uppercase">
+                            Weekly Schedule
+                          </span>
+                        </div>
+                        <div className="flex flex-col gap-3">
+                          {SCHEDULE.map(({ week, label, title, desc }, i) => (
+                            <motion.div
+                              key={week}
+                              custom={i + 5}
+                              initial="hidden" whileInView="visible" viewport={{ once: true }}
+                              variants={fadeUp}
+                              className="relative flex gap-4 pl-4"
+                            >
+                              {/* Timeline bar */}
+                              <div
+                                className="absolute left-0 top-1.5 w-0.5 h-full rounded-full"
+                                style={{ background: i === 0 ? color : `${color}30` }}
+                              />
+                              <div>
+                                <div className="flex items-center gap-2 mb-0.5">
+                                  <span
+                                    className="text-[9px] font-orbitron font-bold tracking-widest uppercase px-2 py-0.5 rounded"
+                                    style={{ color, background: `${color}15` }}
+                                  >
+                                    {week}
+                                  </span>
+                                  <span className="text-[10px] font-exo text-slate-500">{label}</span>
+                                </div>
+                                <p className="font-orbitron text-xs font-bold text-slate-200">{title}</p>
+                                <p className="font-exo text-[11px] text-slate-400 mt-0.5 leading-normal">{desc}</p>
+                              </div>
+                            </motion.div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Bottom stats bar */}
+                  <div
+                    className="mt-10 pt-6 border-t grid grid-cols-3 gap-4 text-center"
+                    style={{ borderColor: `${color}15` }}
+                  >
+                    {[
+                      { icon: Users,            val: "Beginner",  sub: "Level" },
+                      { icon: MonitorSmartphone, val: "Online",   sub: "Format" },
+                      { icon: Layers,           val: "2 Weeks",   sub: "Duration" },
+                    ].map(({ icon: Icon, val, sub }) => (
+                      <div key={sub} className="flex flex-col items-center gap-1">
+                        <Icon size={16} style={{ color }} className="mb-1" />
+                        <span className="font-orbitron font-extrabold text-sm text-slate-100">{val}</span>
+                        <span className="font-exo text-[10px] text-slate-500 uppercase tracking-wider">{sub}</span>
+                      </div>
                     ))}
                   </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Bottom stats bar */}
-            <div
-              className="mt-10 pt-6 border-t grid grid-cols-3 gap-4 text-center"
-              style={{ borderColor: `${color}15` }}
-            >
-              {[
-                { icon: Users,            val: "Beginner",  sub: "Level" },
-                { icon: MonitorSmartphone, val: "Online",   sub: "Format" },
-                { icon: Layers,           val: "2 Weeks",   sub: "Duration" },
-              ].map(({ icon: Icon, val, sub }) => (
-                <div key={sub} className="flex flex-col items-center gap-1">
-                  <Icon size={16} style={{ color }} className="mb-1" />
-                  <span className="font-orbitron font-extrabold text-sm text-slate-100">{val}</span>
-                  <span className="font-exo text-[10px] text-slate-500 uppercase tracking-wider">{sub}</span>
-                </div>
-              ))}
-            </div>
+                </motion.div>
+              ) : (
+                <motion.div
+                  key="guidelines"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  <motion.div
+                    className="grid grid-cols-1 md:grid-cols-2 gap-4"
+                    variants={guideContainer}
+                    initial="hidden"
+                    animate="show"
+                  >
+                    {GUIDELINES.map((item, idx) => {
+                      const { icon: Icon, title, desc, tag } = item;
+                      const isLast = idx === GUIDELINES.length - 1;
+                      return (
+                        <motion.div
+                          key={title}
+                          variants={guideItem}
+                          whileHover={{ 
+                            y: -6, 
+                            scale: 1.015,
+                            borderColor: `${color}60`, 
+                            boxShadow: `0 15px 30px -10px rgba(0,0,0,0.85), 0 0 20px ${color}25`
+                          }}
+                          className={`group/gitem p-5 rounded-xl border border-white/5 bg-slate-900/30 backdrop-blur-xl transition-all duration-300 flex flex-col justify-between cursor-pointer ${
+                            isLast ? "md:col-span-2" : ""
+                          }`}
+                          style={{ borderLeft: `3px solid ${color}` }}
+                        >
+                          <div>
+                            <div className="flex items-center justify-between gap-3 mb-3.5">
+                              <div className="flex items-center gap-3">
+                                <div
+                                  className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0 transition-all duration-300"
+                                  style={{ background: `${color}12`, border: `1px solid ${color}20` }}
+                                >
+                                  <Icon size={16} style={{ color }} className="transition-transform duration-500 ease-[0.16,1,0.3,1] group-hover/gitem:scale-115 group-hover/gitem:rotate-[8deg]" />
+                                </div>
+                                <h4 className="font-orbitron text-xs sm:text-sm font-bold text-white tracking-wide">{title}</h4>
+                              </div>
+                              <span
+                                className="text-[8px] font-orbitron font-extrabold tracking-widest px-2 py-0.5 rounded shrink-0 transition-all duration-300 group-hover/gitem:scale-105"
+                                style={{ color, background: `${color}15`, border: `1px solid ${color}20` }}
+                              >
+                                {tag}
+                              </span>
+                            </div>
+                            <p className="font-exo text-xs text-slate-300 leading-relaxed font-300">{desc}</p>
+                          </div>
+                        </motion.div>
+                      );
+                    })}
+                  </motion.div>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
         </motion.div>
 
