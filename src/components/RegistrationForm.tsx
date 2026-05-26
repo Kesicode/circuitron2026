@@ -275,8 +275,18 @@ export default function RegistrationForm({ onSuccessCallback }: RegistrationForm
     setWhatsappClicked(true); // reveal the confirm button
   };
 
+  // Auto-close 3 seconds after the WhatsApp link is clicked
+  useEffect(() => {
+    if (whatsappClicked && onSuccessCallback) {
+      const timer = setTimeout(() => {
+        onSuccessCallback();
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [whatsappClicked, onSuccessCallback]);
+
   const handleJoinedConfirm = () => {
-    // User says they joined — close the modal now
+    // User says they joined — close the modal now (overrides timer)
     if (onSuccessCallback) onSuccessCallback();
   };
 
