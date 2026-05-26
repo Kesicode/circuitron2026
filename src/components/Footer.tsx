@@ -107,25 +107,20 @@ export default function Footer() {
 
             {/* Mentors */}
             <div className="mt-5 flex flex-col md:items-end">
-              <p className="font-rajdhani font-700 text-[10px] tracking-[.2em] uppercase mb-2 text-slate-500">Mentor Support</p>
+              <p className="font-rajdhani font-700 text-[10px] tracking-[.2em] uppercase mb-2 flex items-center gap-1.5 justify-start md:justify-end text-slate-400">
+                <span className="w-1.5 h-1.5 rounded-full animate-pulse inline-block" style={{ background: color }} />
+                Mentor Support
+              </p>
               <div className="flex flex-col gap-1.5 md:items-end">
                 {[
                   { name: "Devaj A K", link: "https://wa.me/918848718432" },
                   { name: "Adwaith Krishna S", link: "https://wa.me/917025900705" }
                 ].map(({ name, link }) => (
                   <a key={name} href={link} target="_blank" rel="noopener noreferrer"
-                    className="flex items-center gap-1.5 font-exo text-xs transition-all duration-300"
-                    style={{ color: "rgba(148,163,184,.5)", transition: "all 0.3s" }}
-                    onMouseEnter={e => { 
-                      e.currentTarget.style.color = color; 
-                      e.currentTarget.style.textShadow = `0 0 8px ${color}80`;
-                      e.currentTarget.style.filter = `drop-shadow(0 0 4px ${color}60)`;
-                    }}
-                    onMouseLeave={e => { 
-                      e.currentTarget.style.color = "rgba(148,163,184,.5)"; 
-                      e.currentTarget.style.textShadow = "none";
-                      e.currentTarget.style.filter = "none";
-                    }}>
+                    className="flex items-center gap-1.5 font-exo text-xs hover:text-white transition-colors"
+                    style={{ color: "rgba(148,163,184,.5)" }}
+                    onMouseEnter={e => { e.currentTarget.style.color = color; }}
+                    onMouseLeave={e => { e.currentTarget.style.color = "rgba(148,163,184,.5)"; }}>
                     <span>{name}</span>
                     <WhatsAppIcon size={11} />
                   </a>
