@@ -12,6 +12,27 @@ export default function Navbar() {
   const { color } = usePhaseTheme();
   const pathname = usePathname();
   const isNotifyPage = pathname === "/notify";
+  const [buttonText, setButtonText] = useState<string | null>(null);
+
+  useEffect(() => {
+    const updateButton = () => {
+      const now = new Date().getTime();
+      const regStart = new Date("2026-05-26T00:00:00+05:30").getTime();
+      const regEnd = new Date("2026-05-30T23:59:59+05:30").getTime();
+
+      if (now < regStart) {
+        setButtonText("PRE-REGISTER");
+      } else if (now >= regStart && now <= regEnd) {
+        setButtonText("REGISTER NOW");
+      } else {
+        setButtonText(null);
+      }
+    };
+
+    updateButton();
+    const interval = setInterval(updateButton, 1000);
+    return () => clearInterval(interval);
+  }, []);
 
   useEffect(() => {
     const fn = () => setScrolled(window.scrollY > 20);
@@ -118,17 +139,19 @@ export default function Navbar() {
             >
               CONTACT
             </Link>
-            <Link
-              href="/notify"
-              onClick={handleRegisterClick}
-              className="font-orbitron text-[10px] sm:text-[11px] font-bold tracking-wider px-3 min-[480px]:px-3.5 sm:px-4 py-1.5 sm:py-2 rounded-full uppercase text-slate-950 hover:scale-[1.03] active:scale-[0.98] transition-all whitespace-nowrap"
-              style={{
-                background: `linear-gradient(135deg, #ffffff 0%, ${color} 100%)`,
-                boxShadow: `0 0 15px -3px ${color}50`
-              }}
-            >
-              PRE-REGISTER
-            </Link>
+            {buttonText && (
+              <Link
+                href="/notify"
+                onClick={handleRegisterClick}
+                className="font-orbitron text-[10px] sm:text-[11px] font-bold tracking-wider px-3 min-[480px]:px-3.5 sm:px-4 py-1.5 sm:py-2 rounded-full uppercase text-slate-950 hover:scale-[1.03] active:scale-[0.98] transition-all whitespace-nowrap"
+                style={{
+                  background: `linear-gradient(135deg, #ffffff 0%, ${color} 100%)`,
+                  boxShadow: `0 0 15px -3px ${color}50`
+                }}
+              >
+                {buttonText}
+              </Link>
+            )}
           </div>
 
         </div>
