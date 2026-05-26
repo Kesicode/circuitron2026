@@ -108,7 +108,7 @@ export default function Footer() {
             {/* Mentors */}
             <div className="mt-5 flex flex-col md:items-end">
               <p className="font-rajdhani font-700 text-[10px] tracking-[.2em] uppercase mb-2 flex items-center gap-1.5 justify-start md:justify-end text-slate-400">
-                <span className="w-1.5 h-1.5 rounded-full animate-pulse inline-block" style={{ background: color }} />
+                <span className="w-1.5 h-1.5 rounded-full animate-pulse inline-block translate-y-[0.5px]" style={{ background: color }} />
                 Mentor Support
               </p>
               <div className="flex flex-col gap-1.5 md:items-end">
