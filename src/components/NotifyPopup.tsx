@@ -42,10 +42,7 @@ export default function NotifyPopup({ loaded = true }: { loaded?: boolean }) {
   const handleSuccess = () => {
     setSuccess(true);
     localStorage.setItem("circuitron_notify_success", "true");
-    // Auto close modal after 5 seconds to let them click the WhatsApp link
-    setTimeout(() => {
-      setIsOpen(false);
-    }, 5000);
+    setIsOpen(false);
   };
 
   return (

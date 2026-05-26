@@ -245,9 +245,6 @@ export default function RegistrationForm({ onSuccessCallback }: RegistrationForm
       });
 
       setStep(3);
-      if (onSuccessCallback) {
-        onSuccessCallback();
-      }
     } catch (err: any) {
       setError(err.message || "Submission failed. Please verify your internet connection.");
     } finally {
