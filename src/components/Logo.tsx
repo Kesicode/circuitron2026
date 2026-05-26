@@ -19,11 +19,12 @@ export default function Logo({
       style={{
         objectFit: "contain",
         display: "block",
-        /* mix-blend-mode makes the white background invisible
-           against the dark site backgrounds, showing only the
-           cyan C-circuit logo mark — without modifying the
-           original image file in any way */
+        /* mix-blend-mode: multiply or darken might be better to preserve blue colors, 
+           but since background is dark, we need to remove white. 
+           Actually, CSS mix-blend-mode: screen is correct for removing white on black, 
+           but let's scale it up heavily to remove the built-in padding in the image file */
         mixBlendMode: "screen",
+        transform: "scale(1.7)",
       }}
       draggable={false}
     />

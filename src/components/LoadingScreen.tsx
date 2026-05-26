@@ -93,7 +93,7 @@ export default function LoadingScreen({ onComplete, color = "#38bdf8" }: { onCom
             <motion.div
               animate={{ scale: [0.96, 1.04, 0.96], opacity: [0.65, 1, 0.65] }}
               transition={{ duration: 2.2, repeat: Infinity, ease: "easeInOut" }}
-              className="w-32 h-32 sm:w-48 sm:h-48 mb-4 sm:mb-6"
+              className="w-32 h-32 sm:w-48 sm:h-48 translate-y-4 sm:translate-y-6"
               style={{ willChange: "transform, opacity" }}
             >
               <Logo className="w-full h-full" color={color} />
