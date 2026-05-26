@@ -52,6 +52,9 @@ export default function CircuitBackground() {
 
     let nodes = build(), t = 0;
     let lastTime = performance.now();
+    // PERF FIX: Target 30fps on mobile, 60fps on desktop to reduce GPU work
+    const targetInterval = isMobile ? 1000 / 30 : 0;
+    let accumulator = 0;
 
     const draw = (timestamp: number) => {
       raf.current = requestAnimationFrame(draw);
@@ -59,9 +62,16 @@ export default function CircuitBackground() {
       const delta = timestamp - lastTime;
       lastTime = timestamp;
 
-      // Cap delta time to prevent huge animation jumps when the tab is backgrounded/restored
+      // Cap delta to prevent huge animation jumps on tab restore
       const dt = Math.min(100, delta);
-      
+
+      // PERF FIX: Throttle mobile redraws to ~30fps to cut GPU load in half
+      if (isMobile) {
+        accumulator += dt;
+        if (accumulator < targetInterval) return;
+        accumulator -= targetInterval;
+      }
+
       // Calculate speed based on delta time
       const speed = isMobile ? 0.00012 : 0.00018;
       t += dt * speed;
@@ -73,16 +83,15 @@ export default function CircuitBackground() {
       const pulse = (Math.sin(t * 8) + 1) / 2;
       const alpha = isMobile ? (.04 + pulse*.05) : (.06 + pulse*.10);
 
-      // Avoid creating heavy linear gradients on mobile frames (use solid colors instead)
+      let secondaryRgb = "168,85,247";
+      if (color.toLowerCase() === "#a855f7") secondaryRgb = "34,211,238";
+      else if (color.toLowerCase() === "#6366f1") secondaryRgb = "34,211,238";
+
+      // PERF FIX: Create gradient once per frame (not once per connection).
+      // On mobile use a simple solid color to skip gradient creation entirely.
       if (isMobile) {
         ctx.strokeStyle = `rgba(${themeRgb},${alpha.toFixed(3)})`;
       } else {
-        let secondaryRgb = "168,85,247"; // Default purple
-        if (color.toLowerCase() === "#a855f7") {
-          secondaryRgb = "34,211,238"; // Complementary cyan
-        } else if (color.toLowerCase() === "#6366f1") {
-          secondaryRgb = "34,211,238"; // Complementary cyan
-        }
         const lineGrad = ctx.createLinearGradient(0, 0, 0, H);
         lineGrad.addColorStop(0, `rgba(${themeRgb},${alpha.toFixed(3)})`);
         lineGrad.addColorStop(1, `rgba(${secondaryRgb},${alpha.toFixed(3)})`);
@@ -107,23 +116,17 @@ export default function CircuitBackground() {
           ctx.beginPath();
           ctx.moveTo(p1.x, p1.y);
           const midX = p1.x + (p2.x - p1.x) * 0.5;
-          ctx.lineTo(midX, p1.y); 
-          ctx.lineTo(midX, p2.y); 
+          ctx.lineTo(midX, p1.y);
+          ctx.lineTo(midX, p2.y);
           ctx.lineTo(p2.x, p2.y);
           ctx.stroke();
         });
       });
 
-      // 3. Set fill style for dots
+      // 3. Set fill style for dots — reuse secondaryRgb computed above
       if (isMobile) {
         ctx.fillStyle = `rgba(${themeRgb},0.45)`;
       } else {
-        let secondaryRgb = "168,85,247"; // Default purple
-        if (color.toLowerCase() === "#a855f7") {
-          secondaryRgb = "34,211,238"; // Complementary cyan
-        } else if (color.toLowerCase() === "#6366f1") {
-          secondaryRgb = "34,211,238"; // Complementary cyan
-        }
         const dotGrad = ctx.createLinearGradient(0, 0, 0, H);
         dotGrad.addColorStop(0, `rgba(${themeRgb},0.45)`);
         dotGrad.addColorStop(1, `rgba(${secondaryRgb},0.45)`);
@@ -150,10 +153,18 @@ export default function CircuitBackground() {
   }, [color]);
 
   return (
-    <canvas 
-      ref={ref} 
-      className={`fixed inset-0 pointer-events-none z-0 transition-opacity duration-1000 ${mounted ? "opacity-100" : "opacity-0"}`} 
-      aria-hidden="true" 
+    <canvas
+      ref={ref}
+      className={`fixed inset-0 pointer-events-none z-0 transition-opacity duration-1000 ${mounted ? "opacity-100" : "opacity-0"}`}
+      style={{
+        // GPU layer promotion — keeps the canvas on the compositor thread
+        // so page scrolls and layout changes never trigger canvas re-raster.
+        // NOTE: do NOT add contain:paint/strict here — it clips a fixed canvas
+        // to a zero-size paint box and makes it invisible.
+        willChange: "transform",
+        transform: "translateZ(0)",
+      }}
+      aria-hidden="true"
     />
   );
 }

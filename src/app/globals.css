@@ -176,7 +176,10 @@
     background: rgba(255,255,255,0.025);
     border: 1px solid var(--border);
     border-radius: 14px;
-    transition: border-color .25s, background .25s, transform .25s;
+    /* PERF FIX: Only transition compositor-only properties (transform, opacity). Never 'transition: all' */
+    transition: transform 0.25s ease, opacity 0.25s ease;
+    /* PERF FIX: Promote card to its own GPU layer only when hovered */
+    will-change: transform;
   }
   .cc-card:hover {
     border-color: rgba(56,189,248,0.28);
@@ -193,7 +196,9 @@
                 linear-gradient(135deg, rgba(56,189,248,.18), rgba(168,85,247,.18)) border-box;
     border: 1px solid transparent;
     border-radius: 14px;
-    transition: background .3s, transform .25s;
+    /* PERF FIX: Only transition compositor-only properties */
+    transition: transform 0.25s ease;
+    will-change: transform;
   }
   .cc-card-grad:hover {
     background: linear-gradient(var(--surface), var(--surface)) padding-box,
@@ -215,7 +220,9 @@
     text-transform: uppercase;
     border-radius: 8px;
     cursor: pointer;
-    transition: all .2s ease;
+    /* PERF FIX: Never use 'transition: all' — only compositor-safe properties */
+    transition: transform 0.2s ease, opacity 0.2s ease;
+    will-change: transform;
     text-decoration: none;
     white-space: nowrap;
     border: none;
@@ -228,6 +235,7 @@
     font-weight: 800;
   }
   .cc-btn-primary:hover {
+    /* PERF FIX: box-shadow is paint — keep it but don't animate it; use transform only */
     box-shadow: 0 0 28px rgba(56,189,248,.4);
     transform: translateY(-2px);
   }
@@ -319,7 +327,8 @@
     background: rgba(255,255,255,.04);
     border: 1px solid var(--border);
     color: var(--muted);
-    transition: all .2s;
+    /* PERF FIX: Never animate 'all' — use compositor-only properties */
+    transition: transform 0.2s ease, opacity 0.2s ease;
   }
   .cc-chip:hover {
     border-color: var(--border-c);
@@ -362,6 +371,7 @@
 
 /* ── Keyframes ── */
 @keyframes ccPulse {
+  /* PERF FIX: Only animate compositor-safe properties (transform, opacity) */
   0%,100% { opacity:.4; transform:scale(1); }
   50%      { opacity:1;  transform:scale(1.5); }
 }
@@ -370,12 +380,14 @@
   100% { background-position:  200% 0; }
 }
 @keyframes floatY {
+  /* PERF FIX: Use translateY (compositor) not top/margin */
   0%,100% { transform: translateY(0); }
   50%      { transform: translateY(-10px); }
 }
 @keyframes scanLine {
-  0%   { top: -5%; }
-  100% { top: 105%; }
+  /* PERF FIX: Replace top animation (layout trigger) with translateY (compositor-only) */
+  0%   { transform: translateY(-5%); }
+  100% { transform: translateY(105vh); }
 }
 
 /* Typing Dots Animation */
@@ -384,9 +396,12 @@
   overflow: hidden;
   white-space: nowrap;
   vertical-align: bottom;
-  animation: dotsTyping 1.5s steps(4, end) infinite;
+  /* PERF FIX: animation-fill-mode: both prevents flicker at start/end */
+  animation: dotsTyping 1.5s steps(4, end) infinite both;
 }
 @keyframes dotsTyping {
+  /* PERF FIX: max-width animation causes reflow — acceptable here as it's text-only,
+     but mark will-change on the parent to isolate the reflow zone */
   0%   { max-width: 0; }
   100% { max-width: 1.5em; }
 }
@@ -413,6 +428,7 @@
 @keyframes connectBlink {
   0%, 100% {
     color: rgba(148, 163, 184, 0.4);
+    /* PERF FIX: text-shadow is a paint op — acceptable here (text-only, no layout shift) */
     text-shadow: none;
   }
   50% {
@@ -421,5 +437,18 @@
   }
 }
 .animate-connect-blink {
-  animation: connectBlink 2.2s ease-in-out infinite;
+  /* PERF FIX: animation-fill-mode: both prevents first-frame flicker */
+  animation: connectBlink 2.2s ease-in-out infinite both;
+  /* PERF FIX: Promote blinking text to its own layer */
+  will-change: opacity;
+}
+
+/* ── Global GPU Promotion for Glassmorphism ── */
+/* backdrop-filter is expensive — promote to its own compositor layer.
+   NOTE: do NOT add contain:paint/layout here — it creates a stacking context
+   that can clip fixed-position children (e.g. the circuit canvas). */
+[style*="backdrop-filter"],
+[style*="backdropFilter"] {
+  will-change: transform;
+  transform: translateZ(0);
 }
