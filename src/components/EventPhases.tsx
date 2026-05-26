@@ -60,8 +60,8 @@ const HIGHLIGHTS = [
 ];
 
 const SCHEDULE = [
-  { week: "Week 1", label: "Jun 01 – Jun 07", title: "Arduino", desc: "Microcontrollers, Circuits & Programming basics" },
-  { week: "Week 2", label: "Jun 08 – Jun 14", title: "ESP 32",  desc: "IoT Systems, Cloud integration & Final Project" },
+  { week: "Week 1", label: "Jun 01 – Jun 07", title: "Arduino", desc: "Learn the fundamentals of Embedded Systems using Arduino through hands-on programming, circuit design, sensors, automation logic, and practical mini projects." },
+  { week: "Week 2", label: "Jun 08 – Jun 14", title: "ESP 32",  desc: "Explore IoT and smart automation using ESP32, cloud connectivity, Blynk integration, real-time monitoring, and final IoT-based project development." },
 ];
 
 const GUIDELINES = [
