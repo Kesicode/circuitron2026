@@ -464,13 +464,13 @@ export default function EventPhases() {
                             borderColor: `${color}60`, 
                             boxShadow: `0 15px 30px -10px rgba(0,0,0,0.85), 0 0 20px ${color}25`
                           }}
-                          className={`group/gitem p-5 rounded-xl border border-white/5 bg-slate-900/30 backdrop-blur-xl transition-all duration-300 flex flex-col justify-between cursor-pointer ${
+                          className={`group/gitem p-4 sm:p-5 rounded-xl border border-white/5 bg-slate-900/30 backdrop-blur-xl transition-all duration-300 flex flex-col justify-between cursor-pointer ${
                             isLast ? "md:col-span-2" : ""
                           }`}
                           style={{ borderLeft: `3px solid ${color}` }}
                         >
                           <div>
-                            <div className="flex items-center justify-between gap-3 mb-3.5">
+                            <div className="flex flex-col min-[400px]:flex-row min-[400px]:items-center justify-between gap-2.5 mb-3.5">
                               <div className="flex items-center gap-3">
                                 <div
                                   className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0 transition-all duration-300"
@@ -478,10 +478,10 @@ export default function EventPhases() {
                                 >
                                   <Icon size={16} style={{ color }} />
                                 </div>
-                                <h4 className="font-orbitron text-xs sm:text-sm font-bold text-white tracking-wide">{title}</h4>
+                                <h4 className="font-orbitron text-xs sm:text-sm font-bold text-white tracking-wide leading-tight">{title}</h4>
                               </div>
                               <span
-                                className="text-[8px] font-orbitron font-extrabold tracking-widest px-2 py-0.5 rounded shrink-0 transition-all duration-300 group-hover/gitem:scale-105"
+                                className="text-[8px] font-orbitron font-extrabold tracking-widest px-2 py-0.5 rounded shrink-0 self-start min-[400px]:self-center transition-all duration-300 group-hover/gitem:scale-105"
                                 style={{ color, background: `${color}15`, border: `1px solid ${color}20` }}
                               >
                                 {tag}
