@@ -60,8 +60,8 @@ const HIGHLIGHTS = [
 ];
 
 const SCHEDULE = [
-  { week: "Week 1", label: "Jun 01 – Jun 07", title: "Arduino", desc: "Learn the fundamentals of Embedded Systems using Arduino through hands-on programming, circuit design, sensors, automation logic, and practical mini projects." },
-  { week: "Week 2", label: "Jun 08 – Jun 14", title: "ESP 32",  desc: "Explore IoT and smart automation using ESP32, cloud connectivity, Blynk integration, real-time monitoring, and final IoT-based project development." },
+  { week: "Week 1", label: "Jun 01 – Jun 07", title: "Arduino", desc: "Learn the fundamentals of Arduino, Embedded Systems, circuit logic, sensors, and automation through guided simulations, live sessions, and beginner-friendly practical activities using TinkerCAD." },
+  { week: "Week 2", label: "Jun 08 – Jun 14", title: "ESP 32",  desc: "Explore ESP32, IoT workflows, cloud connectivity, smart automation, and mobile-based control systems through Wokwi simulations and Blynk integration." },
 ];
 
 const GUIDELINES = [
