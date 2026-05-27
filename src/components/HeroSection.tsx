@@ -42,12 +42,14 @@ const childVariants = {
 const scrollArrows = [0, 1, 2];
 
 function getPhaseStatus(now: number) {
-  const preStart = 1748015400000; // 2026-05-24T00:00:00+05:30
-  const preEnd   = 1748202599000; // 2026-05-25T23:59:59+05:30
-  const regStart = 1748202600000; // 2026-05-26T00:00:00+05:30
-  const regEnd   = 1748634599000; // 2026-05-30T23:59:59+05:30
+  const preStart         = 1779561000000; // 2026-05-24T00:00:00+05:30
+  const preEnd           = 1779733799000; // 2026-05-25T23:59:59+05:30
+  const regStart         = 1779733800000; // 2026-05-26T00:00:00+05:30
+  const closingSoonStart = 1780079400000; // 2026-05-30T00:00:00+05:30
+  const regEnd           = 1780165799000; // 2026-05-30T23:59:59+05:30
 
-  if (now >= regStart && now <= regEnd) return { text: "REGISTRATION LIVE", active: true };
+  if (now >= closingSoonStart && now <= regEnd) return { text: "REGISTRATION CLOSING_SOON", active: true };
+  if (now >= regStart && now < closingSoonStart) return { text: "REGISTRATION LIVE", active: true };
   if (now >= preStart && now <= preEnd) return { text: "PRE-REGISTRATION LIVE", active: true };
   if (now < preStart) return { text: "PRE-REGISTRATION LIVE", active: true };
   if (now > preEnd && now < regStart) return { text: "REGISTRATION LIVE", active: true };
@@ -55,7 +57,7 @@ function getPhaseStatus(now: number) {
 }
 
 function getTimeLeft(now: number) {
-  const regEnd = 1748634599000;
+  const regEnd = 1780165799000;
   const diff = regEnd - now;
   if (diff <= 0) return null;
   return {
@@ -172,18 +174,18 @@ export default function HeroSection() {
                     return (
                       <motion.span
                         key={`${char}-${i}`}
-                        className="inline-block mr-[0.12em] sm:mr-[0.22em] last:mr-0 sm:last:mr-0 origin-bottom"
+                        className={`inline-block origin-bottom ${char === "_" ? "w-[0.4em]" : "mr-[0.12em] sm:mr-[0.22em] last:mr-0 sm:last:mr-0"}`}
                         style={{
-                          background: `linear-gradient(to bottom, #ffffff 30%, ${color} 100%)`,
-                          WebkitBackgroundClip: "text",
-                          WebkitTextFillColor: "transparent",
-                          backgroundClip: "text",
-                          filter: `drop-shadow(0 0 ${wIdx === 0 ? "8px" : "15px"} ${color}22)`,
+                          background: char === "_" ? "transparent" : `linear-gradient(to bottom, #ffffff 30%, ${color} 100%)`,
+                          WebkitBackgroundClip: char === "_" ? "none" : "text",
+                          WebkitTextFillColor: char === "_" ? "inherit" : "transparent",
+                          backgroundClip: char === "_" ? "none" : "text",
+                          filter: char === "_" ? "none" : `drop-shadow(0 0 ${wIdx === 0 ? "8px" : "15px"} ${color}22)`,
                         }}
                         animate={bounceVariants.animate}
                         transition={{ ...bounceTransitionBase, delay: i * 0.07 }}
                       >
-                        {char}
+                        {char === "_" ? "\u00A0" : char}
                       </motion.span>
                     );
                   })}
