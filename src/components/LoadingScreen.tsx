@@ -1,7 +1,6 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-
 import Logo from "./Logo";
 
 const LOGS = [
@@ -16,30 +15,52 @@ const LOGS = [
 let hasLoadedOnce = false;
 
 export default function LoadingScreen({ onComplete, color = "#38bdf8" }: { onComplete: () => void; color?: string }) {
-  const [progress, setProgress] = useState(0);
-  const [visible,  setVisible]  = useState(true);
-  const [logIdx,   setLogIdx]   = useState(0);
+  // We only need React state for things that drive JSX rendering.
+  // Progress is stored in a ref (no re-render) and only synced to state via
+  // a throttled mechanism — this cuts React renders from ~60/s to ~10/s.
+  const progressRef  = useRef(0);
+  const [displayPct, setDisplayPct] = useState(0);
+  const [visible,    setVisible]    = useState(true);
   const [shouldRender, setShouldRender] = useState(false);
 
   useEffect(() => {
-    if (hasLoadedOnce) {
-      onComplete();
-      return;
-    }
+    if (hasLoadedOnce) { onComplete(); return; }
     setShouldRender(true);
 
-    // RAF-based progress — tied to vsync, no jank from timer threads
     let rafId: number;
-    let lastTs = performance.now();
+    let lastTs      = performance.now();
+    let lastRender  = 0;       // throttle React re-renders
+    const RENDER_INTERVAL = 80; // ms between state updates (~12fps for the counter)
 
     const tick = (ts: number) => {
       const dt = ts - lastTs;
       lastTs = ts;
 
-      setProgress(p => {
-        if (p >= 100) return 100;
-        return Math.min(100, p + (p < 70 ? 2.4 : 1.2) * (dt / 36) + Math.random() * 1.6 * (dt / 36));
-      });
+      // Update progress value in ref (no re-render, zero GC pressure)
+      if (progressRef.current < 100) {
+        const p = progressRef.current;
+        progressRef.current = Math.min(
+          100,
+          p + (p < 70 ? 2.4 : 1.2) * (dt / 36) + Math.random() * 1.6 * (dt / 36)
+        );
+      }
+
+      // Sync to React state at most ~12fps — only the number label needs to update
+      if (ts - lastRender > RENDER_INTERVAL || progressRef.current >= 100) {
+        lastRender = ts;
+        const rounded = Math.min(100, Math.round(progressRef.current));
+        setDisplayPct(rounded);
+
+        if (rounded >= 100) {
+          cancelAnimationFrame(rafId);
+          setTimeout(() => {
+            setVisible(false);
+            hasLoadedOnce = true;
+            setTimeout(onComplete, 600);
+          }, 350);
+          return;
+        }
+      }
 
       rafId = requestAnimationFrame(tick);
     };
@@ -48,30 +69,12 @@ export default function LoadingScreen({ onComplete, color = "#38bdf8" }: { onCom
     return () => cancelAnimationFrame(rafId);
   }, [onComplete]);
 
-  // Exit once 100% reached
-  useEffect(() => {
-    if (progress >= 100) {
-      const t = setTimeout(() => {
-        setVisible(false);
-        hasLoadedOnce = true;
-        setTimeout(onComplete, 600);
-      }, 350);
-      return () => clearTimeout(t);
-    }
-  }, [progress, onComplete]);
-
-  useEffect(() => {
-    const idx = Math.floor((progress / 100) * LOGS.length);
-    if (idx > logIdx) setLogIdx(idx);
-  }, [progress, logIdx]);
-
   if (!shouldRender) return null;
 
   // Overlay fades from 0.94 → 0.15 once progress passes 50%
-  // giving a smooth reveal of the circuit background underneath
-  const overlayOpacity = progress < 50
+  const overlayOpacity = displayPct < 50
     ? 0.94
-    : 0.94 - ((progress - 50) / 50) * 0.79;   // 0.94 → 0.15
+    : 0.94 - ((displayPct - 50) / 50) * 0.79;
 
   return (
     <AnimatePresence>
@@ -81,7 +84,6 @@ export default function LoadingScreen({ onComplete, color = "#38bdf8" }: { onCom
           className="fixed inset-0 z-[9999] flex flex-col items-center justify-center overflow-hidden"
           style={{
             background: `rgba(6,9,18,${overlayOpacity.toFixed(3)})`,
-            // Smooth overlay transition in CSS so it doesn't fight the RAF loop
             transition: "background 0.6s ease",
           }}
           exit={{ opacity: 0 }}
@@ -123,33 +125,31 @@ export default function LoadingScreen({ onComplete, color = "#38bdf8" }: { onCom
                 LOADING
               </span>
 
-              {/* Bar track */}
+              {/* Bar track — width driven by CSS var to avoid React state for bar width */}
               <div
                 className="flex-1 h-[2px] sm:h-[3px] rounded-full overflow-hidden"
                 style={{ background: "rgba(255,255,255,0.07)" }}
               >
-                {/* Fill — no glow, no shadow */}
                 <div
-                  className="h-full transition-all duration-100 ease-out"
+                  className="h-full ease-out"
                   style={{
-                    width: `${progress}%`,
+                    width: `${displayPct}%`,
                     background: `linear-gradient(90deg, #38bdf8, ${color})`,
+                    transition: "width 80ms linear",
                   }}
                 />
               </div>
 
               {/* Percentage */}
               <span
-                className="font-orbitron font-semibold shrink-0 text-[9px] sm:text-[11px]"
+                className="font-orbitron font-semibold shrink-0 text-[9px] sm:text-[11px] tabular-nums"
                 style={{
                   color: "rgba(56,189,248,0.75)",
-                  fontVariantNumeric: "tabular-nums",
-                  fontFeatureSettings: '"tnum"',
                   minWidth: "2.8ch",
                   textAlign: "right",
                 }}
               >
-                {Math.min(100, Math.round(progress))}%
+                {displayPct}%
               </span>
             </div>
 
