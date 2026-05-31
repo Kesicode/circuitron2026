@@ -8,7 +8,7 @@ import { usePhaseTheme } from "@/lib/ConfigContext";
 
 // Pre-compute epoch timestamps once — avoids Date parsing on every render
 const REG_START = 1779733800000; // 2026-05-26T00:00:00+05:30
-const REG_END   = 1780424999000; // 2026-06-02T23:59:59+05:30
+const REG_END   = 1780252199000; // 2026-05-31T23:59:59+05:30
 
 function getButtonText(now: number): string | null {
   if (now < REG_START)  return "PRE-REGISTER";
