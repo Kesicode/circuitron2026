@@ -13,7 +13,9 @@ const getRegistrationStateAndPrice = (date: Date, isIeee: boolean) => {
   const preStart = new Date("2026-05-24T00:00:00+05:30").getTime();
   const preEnd = new Date("2026-05-25T23:59:59+05:30").getTime();
   const regStart = new Date("2026-05-26T00:00:00+05:30").getTime();
-  const regEnd = new Date("2026-05-31T23:59:59+05:30").getTime();
+  const regEnd = new Date("2026-05-30T23:59:59+05:30").getTime();
+  const extStart = new Date("2026-05-31T00:00:00+05:30").getTime();
+  const extEnd = new Date("2026-05-31T23:59:59+05:30").getTime();
 
   if (time < preStart) {
     // Before pre-registration starts, let them pre-register at the discounted rate for early access testing
@@ -34,6 +36,13 @@ const getRegistrationStateAndPrice = (date: Date, isIeee: boolean) => {
     return {
       period: "Normal Registration",
       label: "Normal Registration Phase",
+      price: isIeee ? 100 : 200,
+      status: "open"
+    };
+  } else if (time >= extStart && time <= extEnd) {
+    return {
+      period: "Extended Registration",
+      label: "Extended Registration Phase",
       price: isIeee ? 100 : 200,
       status: "open"
     };
