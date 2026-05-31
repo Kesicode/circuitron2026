@@ -45,8 +45,8 @@ function getPhaseStatus(now: number) {
   const preStart         = 1779561000000; // 2026-05-24T00:00:00+05:30
   const preEnd           = 1779733799000; // 2026-05-25T23:59:59+05:30
   const regStart         = 1779733800000; // 2026-05-26T00:00:00+05:30
-  const closingSoonStart = 1780079400000; // 2026-05-30T00:00:00+05:30
-  const regEnd           = 1780165799000; // 2026-05-30T23:59:59+05:30
+  const closingSoonStart = 1780338600000; // 2026-06-02T00:00:00+05:30
+  const regEnd           = 1780424999000; // 2026-06-02T23:59:59+05:30
 
   if (now >= closingSoonStart && now <= regEnd) return { text: "REGISTRATION CLOSING_SOON", active: true };
   if (now >= regStart && now < closingSoonStart) return { text: "REGISTRATION LIVE", active: true };
@@ -57,7 +57,7 @@ function getPhaseStatus(now: number) {
 }
 
 function getTimeLeft(now: number) {
-  const regEnd = 1780165799000;
+  const regEnd = 1780424999000;
   const diff = regEnd - now;
   if (diff <= 0) return null;
   return {
@@ -203,7 +203,7 @@ export default function HeroSection() {
               className="mt-4 mb-2 flex flex-col items-center gap-3"
             >
               <span className="font-orbitron text-[9px] sm:text-[10px] font-bold tracking-[0.2em] text-slate-400 uppercase select-none">
-                Registration Closes on May 30
+                Registration Closes on June 2
               </span>
               <div
                 className="flex items-center gap-3 sm:gap-4 bg-slate-950/60 border border-white/5 backdrop-blur-md px-5 sm:px-6 py-2.5 sm:py-3.5 rounded-2xl"
