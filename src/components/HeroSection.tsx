@@ -48,7 +48,7 @@ function getPhaseStatus(now: number) {
   const closingSoonStart = 1780165800000; // 2026-05-31T00:00:00+05:30
   const regEnd           = 1780252199000; // 2026-05-31T23:59:59+05:30
 
-  if (now >= closingSoonStart && now <= regEnd) return { text: "REGISTRATION CLOSING_SOON", active: true };
+  if (now >= closingSoonStart && now <= regEnd) return { text: "REGISTRATION REOPENED", active: true };
   if (now >= regStart && now < closingSoonStart) return { text: "REGISTRATION LIVE", active: true };
   if (now >= preStart && now <= preEnd) return { text: "PRE-REGISTRATION LIVE", active: true };
   if (now < preStart) return { text: "PRE-REGISTRATION LIVE", active: true };
