@@ -85,6 +85,7 @@ export default function HeroSection() {
 
   // Use a single state object to halve the number of re-renders
   const [tick, setTick] = useState(() => Date.now());
+  const [isMounted, setIsMounted] = useState(false);
   const rafRef = useRef<number>(0);
   const lastSecRef = useRef<number>(0);
 
@@ -100,6 +101,7 @@ export default function HeroSection() {
   }, []);
 
   useEffect(() => {
+    setIsMounted(true);
     rafRef.current = requestAnimationFrame(rafLoop);
     return () => cancelAnimationFrame(rafRef.current);
   }, [rafLoop]);
@@ -210,22 +212,22 @@ export default function HeroSection() {
                 style={{ boxShadow: `0 0 25px ${color}12` }}
               >
                 <div className="flex flex-col items-center w-10 sm:w-12">
-                  <span className="font-orbitron font-black text-lg sm:text-2xl text-slate-100 tracking-wide tabular-nums">{timeLeft.days}</span>
+                  <span className="font-orbitron font-black text-lg sm:text-2xl text-slate-100 tracking-wide tabular-nums">{isMounted ? timeLeft.days : "00"}</span>
                   <span className="font-exo text-[8px] sm:text-[9px] text-slate-500 uppercase tracking-widest font-bold mt-0.5">Days</span>
                 </div>
                 <div className="w-px h-6 sm:h-8 bg-white/10" />
                 <div className="flex flex-col items-center w-10 sm:w-12">
-                  <span className="font-orbitron font-black text-lg sm:text-2xl text-slate-100 tracking-wide tabular-nums">{timeLeft.hours}</span>
+                  <span className="font-orbitron font-black text-lg sm:text-2xl text-slate-100 tracking-wide tabular-nums">{isMounted ? timeLeft.hours : "00"}</span>
                   <span className="font-exo text-[8px] sm:text-[9px] text-slate-500 uppercase tracking-widest font-bold mt-0.5">Hours</span>
                 </div>
                 <div className="w-px h-6 sm:h-8 bg-white/10" />
                 <div className="flex flex-col items-center w-10 sm:w-12">
-                  <span className="font-orbitron font-black text-lg sm:text-2xl text-slate-100 tracking-wide tabular-nums">{timeLeft.minutes}</span>
+                  <span className="font-orbitron font-black text-lg sm:text-2xl text-slate-100 tracking-wide tabular-nums">{isMounted ? timeLeft.minutes : "00"}</span>
                   <span className="font-exo text-[8px] sm:text-[9px] text-slate-500 uppercase tracking-widest font-bold mt-0.5">Mins</span>
                 </div>
                 <div className="w-px h-6 sm:h-8 bg-white/10" />
                 <div className="flex flex-col items-center w-10 sm:w-12">
-                  <span className="font-orbitron font-black text-lg sm:text-2xl tracking-wide tabular-nums" style={{ color }}>{timeLeft.seconds}</span>
+                  <span className="font-orbitron font-black text-lg sm:text-2xl tracking-wide tabular-nums" style={{ color }}>{isMounted ? timeLeft.seconds : "00"}</span>
                   <span className="font-exo text-[8px] sm:text-[9px] text-slate-500 uppercase tracking-widest font-bold mt-0.5">Secs</span>
                 </div>
               </div>
