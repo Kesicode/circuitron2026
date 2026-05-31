@@ -13,7 +13,7 @@ const getRegistrationStateAndPrice = (date: Date, isIeee: boolean) => {
   const preStart = new Date("2026-05-24T00:00:00+05:30").getTime();
   const preEnd = new Date("2026-05-25T23:59:59+05:30").getTime();
   const regStart = new Date("2026-05-26T00:00:00+05:30").getTime();
-  const regEnd = new Date("2026-05-30T23:59:59+05:30").getTime();
+  const regEnd = new Date("2026-05-31T23:59:59+05:30").getTime();
 
   if (time < preStart) {
     // Before pre-registration starts, let them pre-register at the discounted rate for early access testing
